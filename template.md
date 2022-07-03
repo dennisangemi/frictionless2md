@@ -12,6 +12,6 @@
 
 {{{table}}}
 
-## {{{license}}}
+## 🕮 {{{license}}}
 
-## {{{contributors}}}
+## 👥 {{{contributors}}}
