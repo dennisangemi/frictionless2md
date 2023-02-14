@@ -169,3 +169,11 @@ sono bloccato per un errore di sed
 sed: -e expression #1, char 44: unterminated `s' command
 
 ho apertoi issue tansignari https://github.com/opendatasicilia/tansignari/issues/247
+
+Data dictionary
+
+per ottenere tutti i campi del primo file
+cat datapackage.yaml | yq '[.resources[0].schema.fields[] | {field: .name, type, description}]'
+
+per ottenere campi di tutti i file
+cat datapackage.yaml | yq '.resources[] | {name : .name, fields: .schema.fields}' 
