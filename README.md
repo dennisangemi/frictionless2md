@@ -168,3 +168,4 @@ sono bloccato per un errore di sed
 
 sed: -e expression #1, char 44: unterminated `s' command
 
+ho apertoi issue tansignari https://github.com/opendatasicilia/tansignari/issues/247
