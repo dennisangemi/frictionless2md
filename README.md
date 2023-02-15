@@ -1,9 +1,9 @@
 # 🔧 frictionless2md
 A tool to convert frictionless metadata (datapackage.yaml or json) to md file that can me used as readme
 
-You can obtain a README file like this
 
-> screenshot of the README.md generated with the tool https://github.com/chiaraadornetto/dati-tv-elezioni-ue-2019#readme
+
+> You can obtain a README file like this https://github.com/chiaraadornetto/dati-tv-elezioni-ue-2019#readme
 
 ## Installation
 You can install this tool
@@ -29,13 +29,19 @@ frictionless2md -u username repository-name -f README.md
 
 `-u username repository-name` permits to define your github username and the name of the repo in which data are located. `-f README.md` at the same time declare the output filename.
 
-Example:
+Example (get the datapackage from dennisangemi/myrepo and convert to markdown):
 ```bash
-frictionless2md -u dennisangemi ordinanze-covid -f README.md
+frictionless2md -u dennisangemi myrepo -f README.md
 ```
 
-## Test
-2023-02-14
+
+---
+
+## Diario di bordo
+
+### 2023-02-14
+
+### Installo alcune utilities
 Installo jq https://stedolan.github.io/jq/
 ```bash
 sudo apt-get install jq
@@ -46,7 +52,7 @@ Installo yq https://github.com/kislyuk/yq
 pip install yp
 ```
 
-faccio i primi test.
+### Gioco con yq e jq
 
 Per fare un prettyprint e trasformare yaml in json basta lanciare
 
@@ -54,15 +60,14 @@ Per fare un prettyprint e trasformare yaml in json basta lanciare
 cat datapackage.yaml | yq .
 ```
 
-### Note sui file json
+Note sui file json:
 - un oggetto si indica con `{...}`;
 - un array si indica con `[...]`;
 - un oggetto contiene delle `key`;
 
-[Qui](https://earthly.dev/blog/jq-select/) un tutorial per usare jq e imparare a selezionare oggetti, array e key 
+[Qui](https://earthly.dev/blog/jq-select/) un tutorial per usare jq e imparare a selezionare oggetti, array e key.
 
-### Test
-per avere la lista di tutti i file che sono stati descritti
+Per avere la lista di tutti i file che sono stati descritti
 
 ```bash
 cat datapackage.yaml | yq -r '.resources[].name'
@@ -74,6 +79,7 @@ note:
 - `.name` selezioniamo la key `name` per ogni elemento dell'array resources
 - `-r` sta per "raw" e ci evita le virgolette nell'output
 
+### Licenza
 per avere una tabella md per la licenza
 
 ```bash
@@ -127,6 +133,7 @@ questo script:
 - copia il file template.md in uno che si chiama `metadata.md`
 - sostituisce `{{{license}}}` con l'output del comando che abbiamo scritto prima che torna tutte le info della licenza.
 
+### Contributors
 Passiamo ai contributors
 
 usiamo
@@ -137,7 +144,7 @@ per:
 - accedere ad ogni elemento dell'array contributors con `.contributors[]`
 - costruire l'array di output rinominando le key
 
-Metto tutto dentro [] altrimenti non ottengo un json valido
+Metto tutto dentro `[...]` altrimenti non ottengo un json valido
 
 ```bash
 cat datapackage.yaml | yq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]'
@@ -162,15 +169,106 @@ ovvero
 | Chiara Adornetto | author | chiara.adornetto@tiscali.it |
 | Dennis Angemi | maintainer | dennisangemi@gmail.com |
 
-aggiorno lo script 
+Ho apertoi issue tansignari https://github.com/opendatasicilia/tansignari/issues/247
 
-sono bloccato per un errore di sed
+per sostituire `{{{contributors}}` con la tabella markdown
+```bash
+out=$(cat datapackage.yaml | yq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat)
 
-sed: -e expression #1, char 44: unterminated `s' command
+perl -i -p -e 's/{{{contributors}}}/'"$out"'/g' metadata.md
+```
 
-ho apertoi issue tansignari https://github.com/opendatasicilia/tansignari/issues/247
+### Titolo
+il titolo del datapackage che sarà anche il titolo del repo si ottiene con:
+```bash
+cat datapackage.yaml | yq -r '.title'
+```
 
-Data dictionary
+la sostituisco a `{{{title}}}` con
+
+```bash
+perl -i -p -e 's/{{{title}}}/'"$(cat datapackage.yaml | yq -r '.title')"'/g' metadata.md
+```
+
+### Descrizione
+si ottiene con 
+```bash
+cat datapackage.yaml | yq -r '.description'
+```
+
+la sostituisco a {{{repository-description}}} con
+```bash
+perl -i -p -e 's/{{{repository-description}}}/'"$(cat datapackage.yaml | yq -r '.description')"'/g' metadata.md
+```
+
+### Tree (repo structure)
+Bisogna installare `tree` con
+```bash
+sudo apt install tree
+```
+
+Ho chiesto a ChatGPT di ottenere tree con icone emoji, vediamo che succede
+
+```bash
+tree -F -N | sed 's/\.[^.]*$/& 📄/g;s|/|📁|g'
+```
+adesso devo rimuovere caratteri strani e spostare icone
+
+
+Se faccio
+
+```bash
+tree -F | awk '{ gsub(/\*$/, "📄"); if (match($0, /── /)) { printf "%s📄%s\n", substr($0, 1, RLENGTH), substr($0, RLENGTH+1) } else { print $0 } }'
+```
+
+ottengo
+
+```
+.
+├──📄 README.md📄
+├──📄 contributors.md📄
+├──📄 datapackage.json📄
+├──📄 datapackage.yaml📄
+├──📄 desidero.txt📄
+├──📄 metadata.md📄
+├──📄 requirements.txt📄
+├──📄 script.sh📄
+├──📄 tansignari/
+│  📄 ├── datapackage.yaml📄
+│  📄 ├── metadata.md📄
+│  📄 └── tansignari.zip📄
+├──📄 template.md📄
+├──📄 testtree.sh📄
+└──📄 tree.txt📄
+```
+e quindi le icone due volte.
+
+per rimuovere l'ultima riga di tree fare
+```
+tree | head -n -1
+```
+
+quindi
+```bash
+tree -F | head -n -2 | \
+awk '{ 
+        gsub(/\*$/, "📄"); 
+        if (match($0, /── /)) 
+            { 
+                printf "%s📄%s\n", substr($0, 1, RLENGTH+1), substr($0, RLENGTH+1) 
+            } 
+        else 
+            {
+                print $0 
+            }
+    }'
+```
+
+non funziona perchè qui mette icone in tutte righe
+
+provare a capire meglio questo awk che sembra C.
+
+### Data dictionary
 
 per ottenere tutti i campi del primo file
 cat datapackage.yaml | yq '[.resources[0].schema.fields[] | {field: .name, type, description}]'
