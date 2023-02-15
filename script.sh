@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # set output filename
 OUTPUT_FILENAME="metadata.md"
 
@@ -49,12 +51,13 @@ touch dictionary.md
 # loop over resources
 for (( i=0; i<$n_resources; i++ ))
 do
-    # get resource name and path
+    # get resource infos
     filename=$(cat datapackage.json | jq -r '.resources['$i'].name')
     filepath=$(cat datapackage.json | jq -r '.resources['$i'].path')
-    echo "### 📄 [$filename]($filepath)" >> dictionary.md
+    title=$(cat datapackage.json | jq -r '.resources['$i'].title')
 
-    # get resource infos
+    # print resource infos
+    echo "### 📄 [$filename]($filepath)" >> dictionary.md
     echo "- Path: \`$filepath\`" >> dictionary.md
     echo "- URL:" >> dictionary.md
     echo "- Delimiter:" >> dictionary.md

@@ -1,6 +1,6 @@
-# Comunicare l'Unione Europea
+# indecis.it dataset
 
-Analisi della copertura delle elezioni europee del 2019 nella televisione italiana (contenuti trasmessi da "#cartabianca" e "Dritto e Rovescio"). Dataset allegato alla tesi triennale di Chiara Adornetto
+This dataset was created during the italian election campaign of 2022. indecis.it website fetches and display these data in order to highlight differences in electoral programs.
 
 ## Repository structure 
 ```
@@ -8,6 +8,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ├── README.md
 ├── data
 │   └── trasmissioni.csv
+├── datapackage-old.yaml
 ├── datapackage.json
 ├── datapackage.yaml
 ├── diary.md
@@ -18,63 +19,230 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ```
 
 ## Data Dictionary 
-### 📄 [contenuti](data/contenuti.csv)
-- Path: `data/contenuti.csv`
+### 📄 [categories](data/categories.csv)
+- Path: `data/categories.csv`
 - URL:
 - Delimiter:
 - Encoding: `utf-8`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| id_contenuto | string | Codice identificativo del contenuto trasmesso |
-| id_puntata | string | Codice identificativo della puntata |
-| tipologia | string | Tipologia del contenuto trasmesso |
-| UE | boolean | Indicatore dei contenuti legati all'Unione Europea |
-| id_ospite | string | Codici identificativi ospiti separati da virgole |
-| keyword | string | Parole chiave degli argomenti trattati |
-| start | time | Coordinata temporale inizio intervento |
-| end | time | Coordinata temporale fine intervento |
-| sentiment | string | Sentiment attribuito all'intervento |
+| id | integer |  |
+| slug | string |  |
+| name | string | Italian name of the category |
+| description | string | Italian description of the category |
 
-### 📄 [ospiti](data/ospiti.csv)
-- Path: `data/ospiti.csv`
+### 📄 [coalitions](data/coalitions.csv)
+- Path: `data/coalitions.csv`
 - URL:
 - Delimiter:
 - Encoding: `utf-8`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| id_ospite | string | Codice identificativo dell'ospite |
-| nome | string |  |
-| cognome | string |  |
-| titolo | string | Professione o attività svolta |
-| appartenenza | string | Testa giornalistica o partito politico di appartenenza |
+| id | integer |  |
+| coalition | string |  |
 
-### 📄 [puntate](data/puntate.csv)
-- Path: `data/puntate.csv`
+### 📄 [endorsements](data/endorsements.csv)
+- Path: `data/endorsements.csv`
 - URL:
 - Delimiter:
 - Encoding: `utf-8`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| id_puntata | string | Codice identificativo della puntata |
-| trasmissione | string | Denominazione della trasmissione |
-| data | date | Data della messa in onda della puntata |
-| durata_puntata | time | Durata della puntata |
+| id | integer |  |
+| description | string | Description of endorsement types |
+| icon | string | Color of the icon to display |
+| color_code | string | HEX code |
 
-### 📄 [trasmissioni](data/trasmissioni.csv)
-- Path: `data/trasmissioni.csv`
+### 📄 [glossary](data/glossary.csv)
+- Path: `data/glossary.csv`
 - URL:
 - Delimiter:
 - Encoding: `utf-8`
 
 | Field | Type | Description |
 | --- | --- | --- |
-| trasmissione | string | Denominazione della trasmissione |
-| rete | string | Denominazione della rete televisiva |
-| canale | string | Denominazione del canale televisivo |
-| numero | integer | Numerazione LCN nazionale dei canali TV |
+| id | integer |  |
+| subject | string |  |
+| slug | string |  |
+| url | string | URL of an external reference |
+| source | string |  |
+| title | string |  |
+| description | string | Subject description |
+
+### 📄 [items](data/items.csv)
+- Path: `data/items.csv`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+| Field | Type | Description |
+| --- | --- | --- |
+| id | integer |  |
+| category | string | Category name in Italian |
+| category_id | integer |  |
+| subject | string |  |
+| subject_slug | string |  |
+| subject_id | integer |  |
+| source | string |  |
+| source_slug | string |  |
+| list | string |  |
+| list_id | integer |  |
+| endorsement | string | Endorsement referred to the subject. See endorsements file for more information. |
+| description | string | Description of the position taken by the list |
+
+### 📄 [leaders](data/leaders.csv)
+- Path: `data/leaders.csv`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+| Field | Type | Description |
+| --- | --- | --- |
+| id | integer |  |
+| name | string |  |
+| surname | string |  |
+| list | string | Electoral list name |
+| list_id | integer | Electoral list ID |
+| profile_pic | string | Profile image URL |
+| wikipedia_url | string | Wikipedia page URL |
+
+### 📄 [lists](data/lists.csv)
+- Path: `data/lists.csv`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+| Field | Type | Description |
+| --- | --- | --- |
+| id | integer | Electoral list ID |
+| list | string | Electoral list name |
+| slug | string | Electoral list slug |
+| symbol_name | string |  |
+| symbol_url | string |  |
+
+### 📄 [parties](data/parties.csv)
+- Path: `data/parties.csv`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+| Field | Type | Description |
+| --- | --- | --- |
+| id | integer |  |
+| party | string |  |
+| list_id | integer | Electoral list ID |
+| list | string | Electoral list name |
+| coalition_id | integer |  |
+| coalition | string |  |
+
+### 📄 [sources](data/sources.csv)
+- Path: `data/sources.csv`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+| Field | Type | Description |
+| --- | --- | --- |
+| id | integer |  |
+| title | string |  |
+| slug | string |  |
+| type | string |  |
+| url | string |  |
+| list | string | Electoral list name |
+| list_id | integer | Electoral list ID |
+
+### 📄 [press](data/press.csv)
+- Path: `data/press.csv`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+| Field | Type | Description |
+| --- | --- | --- |
+| id | integer |  |
+| post_id | integer |  |
+| url | string |  |
+| post_title | string |  |
+| post_subtitle | string |  |
+| type | string |  |
+| source | string |  |
+| subject | string |  |
+| list | string |  |
+| subject_id | integer |  |
+| list_id | integer |  |
+
+### 📄 [categories-json-version](data/categories.json)
+- Path: `data/categories.json`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+
+### 📄 [coalitions-json-version](data/coalitions.json)
+- Path: `data/coalitions.json`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+
+### 📄 [endorsements-json-version](data/endorsements.json)
+- Path: `data/endorsements.json`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+
+### 📄 [glossary-json-version](data/glossary.json)
+- Path: `data/glossary.json`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+
+### 📄 [lists-json-version](data/lists.json)
+- Path: `data/lists.json`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+
+### 📄 [parties-json-version](data/parties.json)
+- Path: `data/parties.json`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+
+### 📄 [sources-json-version](data/sources.json)
+- Path: `data/sources.json`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+
+### 📄 [leaders-json-version](data/leaders.json)
+- Path: `data/leaders.json`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+
+### 📄 [items-json-version](data/items.json)
+- Path: `data/items.json`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
+
+### 📄 [pgpolitica-json-version](data/press.json)
+- Path: `data/press.json`
+- URL:
+- Delimiter:
+- Encoding: `utf-8`
+
 
 
 ## 📖 License
@@ -83,5 +251,11 @@ Quest'opera è distribuita con Licenza [Creative Commons Attribution 4.0 ](https
 ## 👥 Contributors
 | Name | Role | Email |
 | --- | --- | --- |
-| Chiara Adornetto | author | chiara.adornetto.it |
-| Dennis Angemi | maintainer | dennisangemi.com |
+| Chiara Adornetto |  | chiara.adornetto.it |
+| Dennis Angemi |  | dennisangemi.com |
+| Carlo Canepa |  | c.canepa.it |
+| Moreno Colaiacovo |  | emmecola83.com |
+| Alice Nicole Ginosa |  | alicenicoleginosa.com |
+| Angelo Gulina |  | gulina.angelo.com |
+| Vittorio Nicoletta |  | vittorio.nicoletta.1.com |
+| Lorenzo Ruffino |  | lorenzoruffino97.com |
