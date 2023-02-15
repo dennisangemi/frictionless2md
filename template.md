@@ -10,7 +10,7 @@
 ## Data Dictionary 
 {{{data-dictionary}}}
 
-## 🕮 License
+## 📖 License
 {{{license}}}
 
 ## 👥 Contributors
