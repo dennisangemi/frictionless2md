@@ -29,8 +29,15 @@ perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $OUTPUT_
 sed -i "s|{{{license}}}|$(echo "Quest'opera è distribuita con Licenza ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')")")|g" $OUTPUT_FILENAME
 
 # add contributors table
-contributors_table=$(cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat)
-perl -i -p -e 's/{{{contributors}}}/'"$contributors_table"'/g' $OUTPUT_FILENAME
+# contributors_table=$(cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat)
+# perl -i -p -e 's/{{{contributors}}}/'"$contributors_table"'/g' $OUTPUT_FILENAME
+cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat > frct-contributors.md
+sed -i -e '/{{{contributors}}}/r frct-contributors.md' -e '//d' metadata.md
+
+# if frct-contributors.md exists, delete it
+if [ -f frct-contributors.md ]; then
+    rm frct-contributors.md
+fi
 
 # data dictionary
 
