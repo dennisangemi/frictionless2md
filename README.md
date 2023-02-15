@@ -3,9 +3,8 @@ A tool to convert frictionless metadata (datapackage.yaml or json) to md file th
 
 > You can obtain a README file like this https://github.com/chiaraadornetto/dati-tv-elezioni-ue-2019#readme
 
-Currently you can launch `./script.sh` in a directory where datapackage is located.
+Currently you can launch `./script.sh` in a directory where datapackage is located (make sure to copy `template.md`).
 Read [requirements.txt](requirements.txt) otherwise the bash script won't work. 
-
 
 # Future developments 
 ## Installation
