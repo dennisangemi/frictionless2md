@@ -10,6 +10,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 │   └── trasmissioni.csv
 ├── datapackage.json
 ├── datapackage.yaml
+├── diary.md
 ├── metadata.md
 ├── requirements.txt
 ├── script.sh
@@ -43,15 +44,11 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 
 | name | type | description |
 | --- | --- | --- |
-| id_contenuto | string | Codice identificativo del contenuto trasmesso |
-| id_puntata | string | Codice identificativo della puntata |
-| tipologia | string | Tipologia del contenuto trasmesso |
-| UE | boolean | Indicatore dei contenuti legati all'Unione Europea |
-| id_ospite | string | Codici identificativi ospiti separati da virgole |
-| keyword | string | Parole chiave degli argomenti trattati |
-| start | time | Coordinata temporale inizio intervento |
-| end | time | Coordinata temporale fine intervento |
-| sentiment | string | Sentiment attribuito all'intervento |
+| id_ospite | string | Codice identificativo dell'ospite |
+| nome | string |  |
+| cognome | string |  |
+| titolo | string | Professione o attività svolta |
+| appartenenza | string | Testa giornalistica o partito politico di appartenenza |
 
 ### 📄 puntate
 - Path: `data/puntate.csv`
@@ -61,15 +58,10 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 
 | name | type | description |
 | --- | --- | --- |
-| id_contenuto | string | Codice identificativo del contenuto trasmesso |
 | id_puntata | string | Codice identificativo della puntata |
-| tipologia | string | Tipologia del contenuto trasmesso |
-| UE | boolean | Indicatore dei contenuti legati all'Unione Europea |
-| id_ospite | string | Codici identificativi ospiti separati da virgole |
-| keyword | string | Parole chiave degli argomenti trattati |
-| start | time | Coordinata temporale inizio intervento |
-| end | time | Coordinata temporale fine intervento |
-| sentiment | string | Sentiment attribuito all'intervento |
+| trasmissione | string | Denominazione della trasmissione |
+| data | date | Data della messa in onda della puntata |
+| durata_puntata | time | Durata della puntata |
 
 ### 📄 trasmissioni
 - Path: `data/trasmissioni.csv`
@@ -79,15 +71,10 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 
 | name | type | description |
 | --- | --- | --- |
-| id_contenuto | string | Codice identificativo del contenuto trasmesso |
-| id_puntata | string | Codice identificativo della puntata |
-| tipologia | string | Tipologia del contenuto trasmesso |
-| UE | boolean | Indicatore dei contenuti legati all'Unione Europea |
-| id_ospite | string | Codici identificativi ospiti separati da virgole |
-| keyword | string | Parole chiave degli argomenti trattati |
-| start | time | Coordinata temporale inizio intervento |
-| end | time | Coordinata temporale fine intervento |
-| sentiment | string | Sentiment attribuito all'intervento |
+| trasmissione | string | Denominazione della trasmissione |
+| rete | string | Denominazione della rete televisiva |
+| canale | string | Denominazione del canale televisivo |
+| numero | integer | Numerazione LCN nazionale dei canali TV |
 
 
 ## 🕮 License
