@@ -60,7 +60,7 @@ do
     echo "" >> dictionary.md
 
     # create csv table
-    cat datapackage.json | jq '[.resources['$i'].schema.fields[] | {name, type, description}]' | mlr --j2c cat > frct-schema-$i.csv
+    cat datapackage.json | jq '[.resources['$i'].schema.fields[] | {Field: .name, Type: .type, Description: .description}]' | mlr --j2c cat > frct-schema-$i.csv
     # join frct-schema-$i.csv with first 2 line of $path (transposed) to get the column example
 
     # convert frct-schema-$i.csv to markdown

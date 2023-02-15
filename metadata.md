@@ -24,7 +24,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 - Delimiter:
 - Encoding: `utf-8`
 
-| name | type | description |
+| Field | Type | Description |
 | --- | --- | --- |
 | id_contenuto | string | Codice identificativo del contenuto trasmesso |
 | id_puntata | string | Codice identificativo della puntata |
@@ -42,7 +42,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 - Delimiter:
 - Encoding: `utf-8`
 
-| name | type | description |
+| Field | Type | Description |
 | --- | --- | --- |
 | id_ospite | string | Codice identificativo dell'ospite |
 | nome | string |  |
@@ -56,7 +56,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 - Delimiter:
 - Encoding: `utf-8`
 
-| name | type | description |
+| Field | Type | Description |
 | --- | --- | --- |
 | id_puntata | string | Codice identificativo della puntata |
 | trasmissione | string | Denominazione della trasmissione |
@@ -69,7 +69,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 - Delimiter:
 - Encoding: `utf-8`
 
-| name | type | description |
+| Field | Type | Description |
 | --- | --- | --- |
 | trasmissione | string | Denominazione della trasmissione |
 | rete | string | Denominazione della rete televisiva |
