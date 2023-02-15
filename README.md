@@ -1,10 +1,9 @@
 # 🔧 frictionless2md
 A tool to convert frictionless metadata (datapackage.yaml or json) to md file that can me used as readme
 
-
-
 > You can obtain a README file like this https://github.com/chiaraadornetto/dati-tv-elezioni-ue-2019#readme
 
+# Ideas
 ## Installation
 You can install this tool
 ```bash
