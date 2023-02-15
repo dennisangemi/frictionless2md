@@ -18,7 +18,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ```
 
 ## Data Dictionary 
-### 📄 contenuti
+### 📄 [contenuti](data/contenuti.csv)
 - Path: `data/contenuti.csv`
 - URL:
 - Delimiter:
@@ -36,7 +36,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 | end | time | Coordinata temporale fine intervento |
 | sentiment | string | Sentiment attribuito all'intervento |
 
-### 📄 ospiti
+### 📄 [ospiti](data/ospiti.csv)
 - Path: `data/ospiti.csv`
 - URL:
 - Delimiter:
@@ -50,7 +50,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 | titolo | string | Professione o attività svolta |
 | appartenenza | string | Testa giornalistica o partito politico di appartenenza |
 
-### 📄 puntate
+### 📄 [puntate](data/puntate.csv)
 - Path: `data/puntate.csv`
 - URL:
 - Delimiter:
@@ -63,7 +63,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 | data | date | Data della messa in onda della puntata |
 | durata_puntata | time | Durata della puntata |
 
-### 📄 trasmissioni
+### 📄 [trasmissioni](data/trasmissioni.csv)
 - Path: `data/trasmissioni.csv`
 - URL:
 - Delimiter:

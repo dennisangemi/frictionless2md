@@ -49,10 +49,12 @@ touch dictionary.md
 # loop over resources
 for (( i=0; i<$n_resources; i++ ))
 do
-    # get resource name
+    # get resource name and path
     filename=$(cat datapackage.json | jq -r '.resources['$i'].name')
-    echo "### 📄 $filename" >> dictionary.md
     filepath=$(cat datapackage.json | jq -r '.resources['$i'].path')
+    echo "### 📄 [$filename]($filepath)" >> dictionary.md
+
+    # get resource infos
     echo "- Path: \`$filepath\`" >> dictionary.md
     echo "- URL:" >> dictionary.md
     echo "- Delimiter:" >> dictionary.md
