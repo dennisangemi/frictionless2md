@@ -2,16 +2,13 @@
 
 {{{repository-description}}}
 
+## Repository structure 
+```
+{{{repository-structure}}}
+```
+
 ## Data Dictionary 
 {{{data-dictionary}}}
-
-### 📄 {{{filename.csv}}}
-
-{{{file-description}}}
-
-{{{file-info}}}
-
-{{{table}}}
 
 ## 🕮 License
 {{{license}}}
