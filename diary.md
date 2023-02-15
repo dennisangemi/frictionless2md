@@ -236,3 +236,18 @@ cat datapackage.yaml | yq '[.resources[0].schema.fields[] | {field: .name, type,
 
 per ottenere campi di tutti i file
 cat datapackage.yaml | yq '.resources[] | {name : .name, fields: .schema.fields}' 
+
+per fare merge di title e description si fa
+```bash
+cat test.json | jq '[.resources[0].schema.fields[] | {name, type, title, description}]' | jq 'map(.merge = if .title then "\(.title). \(.description)" else .description end | del(.title) | del(.description))'
+```
+
+aggiorno con
+
+```bash
+cat datapackage.json | jq '[.resources[0].schema.fields[] | {name, type, title, description} | {Field: .name, Type: .type, Description: ((.title // "") + if .title and .description then ": " else "" end + (.description // ""))}]' | mlr --j2c cat > frct-schema-$i.csv
+```
+
+ma questo non va perchè si mangia nome e cognome in ospiti ad esempio
+
+insomma bisogna giocare un po' con gli if e studiare map
