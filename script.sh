@@ -5,29 +5,54 @@ set -e
 # set output filename
 OUTPUT_FILENAME="metadata.md"
 
+### CHECK IF DATAPACKAGE EXISTS
+
 # if datapckage.yaml exists, convert to json
 if [ -f datapackage.yaml ]; then
-    cat datapackage.yaml | yq . > datapackage.json
+
+    # set package format
     package_format="yaml"
-else
+
+    # convert to json
+    cat datapackage.yaml | yq . > datapackage.json
+
+# if datapackage.json exists
+elif [ -f datapackage.json ]; then
+
+    # set package format
     package_format="json"
+
+# if neither exists, exit
+else
+    echo -e "❌ \e[31mError: datapackage not found\e[0m"
+    echo "Please create a datapackage.json or datapackage.yaml file."
+    exit 1
 fi
+
+# confirm existance
+echo "✅ datapackage exists"
 
 # copy template
 cp template.md $OUTPUT_FILENAME
 
+
+### PACKAGE TITLE
 # add title
 perl -i -p -e 's/{{{title}}}/'"$(cat datapackage.json | jq -r '.title')"'/g' $OUTPUT_FILENAME
 
+### PACKAGE DESCRIPTION
 # add repo description
 perl -i -p -e 's/{{{repository-description}}}/'"$(cat datapackage.json | jq -r '.description')"'/g' $OUTPUT_FILENAME
 
+### REPORITORY STRUCTURE
 # add tree
 perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $OUTPUT_FILENAME
 
+### PACKAGE LICENSE
 # add license info
 sed -i "s|{{{license}}}|$(echo "Quest'opera è distribuita con Licenza ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')")")|g" $OUTPUT_FILENAME
 
+### CONTRIBUTORS
 # add contributors table
 # contributors_table=$(cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat)
 # perl -i -p -e 's/{{{contributors}}}/'"$contributors_table"'/g' $OUTPUT_FILENAME
@@ -39,7 +64,7 @@ if [ -f frct-contributors.md ]; then
     rm frct-contributors.md
 fi
 
-# data dictionary
+### DATA DICTIONARY
 
 # count the number of resources
 n_resources=$(cat datapackage.json | jq -r '.resources[].name' | wc -l)
@@ -89,10 +114,11 @@ done
 # substitute {{{data-dictionary}}} with dictionary.md
 sed -i -e '/{{{data-dictionary}}}/r dictionary.md' -e '//d' $OUTPUT_FILENAME
 
+### CLEANUP
 # delete dictionary.md
 rm dictionary.md
 
-# delete unnecessary files
+# if package is yaml, delete json created
 if package_format="yaml"; then
     rm datapackage.json
 fi
