@@ -32,9 +32,8 @@ fi
 # confirm existance
 echo "✅ datapackage exists"
 
-# copy template
+# copy template (to be modified)
 cp template.md $OUTPUT_FILENAME
-
 
 ### PACKAGE TITLE
 # add title
@@ -115,6 +114,7 @@ done
 sed -i -e '/{{{data-dictionary}}}/r dictionary.md' -e '//d' $OUTPUT_FILENAME
 
 ### CLEANUP
+
 # delete dictionary.md
 rm dictionary.md
 
@@ -122,3 +122,7 @@ rm dictionary.md
 if package_format="yaml"; then
     rm datapackage.json
 fi
+
+### END
+
+echo "✅ $OUTPUT_FILENAME created"
