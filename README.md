@@ -19,11 +19,15 @@ Launch simply `frictionless2md` in the same directory where `datapackage.yaml` i
 
 ### Options
 
+### Specify output filename
+
 ```bash
-frictionless2md -f README.md
+frictionless2md -o README.md
 ```
 
 `-f README.md` declare the output filename
+
+### Specify GitHub infos
 
 ```bash
 frictionless2md -u username repository-name -f README.md
