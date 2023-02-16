@@ -252,6 +252,8 @@ ma questo non va perchè si mangia nome e cognome in ospiti ad esempio
 
 insomma bisogna giocare un po' con gli if e studiare map
 
+## 2023-02-16
+
 ## delimiter exist
 ```bash
 cat datapackage.yaml | yq '.resources[0].dialect.csv | has("delimiter")'
@@ -270,3 +272,6 @@ output:
 true
 
 fonte: https://stackoverflow.com/a/68401250
+
+## flag -o per file di output
+mi faccio aiutare da chatGPT: 

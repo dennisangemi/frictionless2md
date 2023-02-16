@@ -5,7 +5,7 @@ set -e
 # set default output filename
 DEFAULT_OUTPUT_FILENAME="METADATA.md"
 
-### OPTIONS
+### OPTIONS ###
 
 # parsing
 while getopts "o:" arg; do
@@ -27,8 +27,7 @@ if [ -z $output_file ]; then
     # echo "Using default output filename: $output_file"
 fi
 
-### CHECK IF DATAPACKAGE EXISTS
-
+### CHECK IF DATAPACKAGE EXISTS ###
 # if datapckage.yaml exists, convert to json
 if [ -f datapackage.yaml ]; then
 
@@ -54,27 +53,54 @@ fi
 # confirm existance
 echo "✅ datapackage exists"
 
-# copy template (to be modified)
-cp template.md $output_file
 
-### PACKAGE TITLE
+### SETUP TEMPLATE ###
+# copy template (to be modified)
+# cp template.md $output_file
+
+echo "Building $output_file..."
+
+# if $output_file exists, delete it
+if [ -f $output_file ]; then
+    rm $output_file
+fi
+
+# create new $output_file
+touch $output_file
+
+echo "# {{{title}}}
+" >> $output_file
+echo "{{{repository-description}}}
+" >> $output_file
+echo "## Repository structure 
+\`\`\`
+{{{repository-structure}}}
+\`\`\`
+
+## Data Dictionary 
+{{{data-dictionary}}}
+
+## 📖 License
+{{{license}}}
+
+## 👥 Contributors
+{{{contributors}}}" >> $output_file
+
+
+### PACKAGE TITLE ###
 # add title
 perl -i -p -e 's/{{{title}}}/'"$(cat datapackage.json | jq -r '.title')"'/g' $output_file
 
-### PACKAGE DESCRIPTION
-# add repo description
+### PACKAGE DESCRIPTION ###
 perl -i -p -e 's/{{{repository-description}}}/'"$(cat datapackage.json | jq -r '.description')"'/g' $output_file
 
-### REPORITORY STRUCTURE
-# add tree
+### REPORITORY STRUCTURE ###
 perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $output_file
 
 ### PACKAGE LICENSE
-# add license info
 sed -i "s|{{{license}}}|$(echo "This work is licensed under a ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')") License")|g" $output_file
 
 ### CONTRIBUTORS
-# add contributors table
 # contributors_table=$(cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat)
 # perl -i -p -e 's/{{{contributors}}}/'"$contributors_table"'/g' $output_file
 cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat > frct-contributors.md
@@ -85,7 +111,7 @@ if [ -f frct-contributors.md ]; then
     rm frct-contributors.md
 fi
 
-### DATA DICTIONARY
+### DATA DICTIONARY ###
 
 # count the number of resources
 n_resources=$(cat datapackage.json | jq -r '.resources[].name' | wc -l)
@@ -97,9 +123,6 @@ fi
 
 # create temp file dictionary.md
 touch dictionary.md
-
-# test n_resources
-# n_resources=2
 
 # loop over resources
 for (( i=0; i<$n_resources; i++ ))

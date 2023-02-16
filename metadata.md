@@ -7,18 +7,17 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 .
 ├── METADATA.md
 ├── README.md
+├── bin
+│   └── template.md
 ├── data
 │   ├── dialect.json
 │   └── trasmissioni.csv
 ├── datapackage.json
 ├── datapackage.yaml
 ├── diary.md
-├── imieimetadatai.md
 ├── requirements.txt
 ├── script.sh
-├── template.md
-├── test.json
-└── test.sh
+└── tmp_package.json
 ```
 
 ## Data Dictionary 

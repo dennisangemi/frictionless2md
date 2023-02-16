@@ -10,7 +10,7 @@ Currently you can launch
 ```bash
 ./script.sh
 ``` 
-in a directory where a datapackage is located (make sure to copy `template.md`) and the default output file will be `METADATA.md`.
+in a directory where a datapackage is located and the default output file will be `METADATA.md`.
 
 ### Options
 
