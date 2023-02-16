@@ -49,7 +49,7 @@ perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $OUTPUT_
 
 ### PACKAGE LICENSE
 # add license info
-sed -i "s|{{{license}}}|$(echo "Quest'opera è distribuita con Licenza ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')")")|g" $OUTPUT_FILENAME
+sed -i "s|{{{license}}}|$(echo "This work is licensed under a ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')") License")|g" $OUTPUT_FILENAME
 
 ### CONTRIBUTORS
 # add contributors table
@@ -100,7 +100,7 @@ do
         delimiter=$(jq -r '.resources['$i'].dialect.csv.delimiter' datapackage.json)
         echo "- Delimiter: \`$delimiter\`" >> dictionary.md
     else
-        echo -e "⚠️ Dialect key not found for $filename"
+        echo -e "⚠️ Warning: Dialect key not found for $filename"
         echo "Delimiter info will not be added to $OUTPUT_FILENAME"
     fi
 

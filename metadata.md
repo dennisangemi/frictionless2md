@@ -15,8 +15,6 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ├── metadata.md
 ├── requirements.txt
 ├── script.sh
-├── t-datapackage.yaml
-├── temp.sh
 ├── template.md
 └── test.json
 ```
@@ -79,7 +77,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 
 
 ## 📖 License
-Quest'opera è distribuita con Licenza [Creative Commons Attribution 4.0 ](https://creativecommons.org/licenses/by/4.0/) (CC-BY-4.0)
+This work is licensed under a [Creative Commons Attribution 4.0 ](https://creativecommons.org/licenses/by/4.0/) (CC-BY-4.0) License
 
 ## 👥 Contributors
 | Name | Role | Email |

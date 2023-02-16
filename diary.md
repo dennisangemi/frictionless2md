@@ -260,3 +260,13 @@ cat datapackage.yaml | yq '.resources[0].dialect.csv | has("delimiter")'
 ritorna in output `true` se delimiter esiste
 
 se è true allora include encoding in metadata md prodotto
+
+### Approfondimento
+use has("mykey1") (for objects) or has(0) (for arrays):
+
+jq 'has("name")' <<< "{\"name\": \"hello\"}"
+output:
+
+true
+
+fonte: https://stackoverflow.com/a/68401250
