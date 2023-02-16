@@ -2,8 +2,30 @@
 
 set -e
 
-# set output filename
-OUTPUT_FILENAME="metadata.md"
+# set default output filename
+DEFAULT_OUTPUT_FILENAME="METADATA.md"
+
+### OPTIONS
+
+# parsing
+while getopts "o:" arg; do
+  case $arg in
+    o)
+      output_file=$OPTARG
+      ;;
+    *)
+      echo -e "❌ \e[31mError: option not found\e[0m"
+      echo "Usage: ./script.sh -o FILENAME.md"
+      exit 1
+      ;;
+  esac
+done
+
+# if output file is not set, use default
+if [ -z $output_file ]; then
+    output_file=$DEFAULT_OUTPUT_FILENAME
+    # echo "Using default output filename: $output_file"
+fi
 
 ### CHECK IF DATAPACKAGE EXISTS
 
@@ -33,30 +55,30 @@ fi
 echo "✅ datapackage exists"
 
 # copy template (to be modified)
-cp template.md $OUTPUT_FILENAME
+cp template.md $output_file
 
 ### PACKAGE TITLE
 # add title
-perl -i -p -e 's/{{{title}}}/'"$(cat datapackage.json | jq -r '.title')"'/g' $OUTPUT_FILENAME
+perl -i -p -e 's/{{{title}}}/'"$(cat datapackage.json | jq -r '.title')"'/g' $output_file
 
 ### PACKAGE DESCRIPTION
 # add repo description
-perl -i -p -e 's/{{{repository-description}}}/'"$(cat datapackage.json | jq -r '.description')"'/g' $OUTPUT_FILENAME
+perl -i -p -e 's/{{{repository-description}}}/'"$(cat datapackage.json | jq -r '.description')"'/g' $output_file
 
 ### REPORITORY STRUCTURE
 # add tree
-perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $OUTPUT_FILENAME
+perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $output_file
 
 ### PACKAGE LICENSE
 # add license info
-sed -i "s|{{{license}}}|$(echo "This work is licensed under a ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')") License")|g" $OUTPUT_FILENAME
+sed -i "s|{{{license}}}|$(echo "This work is licensed under a ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')") License")|g" $output_file
 
 ### CONTRIBUTORS
 # add contributors table
 # contributors_table=$(cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat)
-# perl -i -p -e 's/{{{contributors}}}/'"$contributors_table"'/g' $OUTPUT_FILENAME
+# perl -i -p -e 's/{{{contributors}}}/'"$contributors_table"'/g' $output_file
 cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat > frct-contributors.md
-sed -i -e '/{{{contributors}}}/r frct-contributors.md' -e '//d' metadata.md
+sed -i -e '/{{{contributors}}}/r frct-contributors.md' -e '//d' $output_file
 
 # if frct-contributors.md exists, delete it
 if [ -f frct-contributors.md ]; then
@@ -100,8 +122,8 @@ do
         delimiter=$(jq -r '.resources['$i'].dialect.csv.delimiter' datapackage.json)
         echo "- Delimiter: \`$delimiter\`" >> dictionary.md
     else
-        echo -e "⚠️ Warning: Dialect key not found for $filename"
-        echo "Delimiter info will not be added to $OUTPUT_FILENAME"
+        echo -e "⚠️  Warning: Dialect key not found for $filename"
+        echo "Delimiter info will not be added to $output_file"
     fi
 
     echo "- Encoding: \`$(cat datapackage.json | jq -r '.resources['$i'].encoding')\`" >> dictionary.md
@@ -123,7 +145,7 @@ do
 done
 
 # substitute {{{data-dictionary}}} with dictionary.md
-sed -i -e '/{{{data-dictionary}}}/r dictionary.md' -e '//d' $OUTPUT_FILENAME
+sed -i -e '/{{{data-dictionary}}}/r dictionary.md' -e '//d' $output_file
 
 ### CLEANUP
 
@@ -137,4 +159,4 @@ fi
 
 ### END
 
-echo "✅ $OUTPUT_FILENAME created"
+echo "✅ $output_file created"
