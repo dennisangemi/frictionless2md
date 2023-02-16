@@ -73,7 +73,7 @@ if [ -f dictionary.md ]; then
     rm dictionary.md
 fi
 
-# create dictionary.md
+# create temp file dictionary.md
 touch dictionary.md
 
 # test n_resources
@@ -91,7 +91,19 @@ do
     echo "### 📄 [$filename]($filepath)" >> dictionary.md
     echo "- Path: \`$filepath\`" >> dictionary.md
     echo "- URL:" >> dictionary.md
-    echo "- Delimiter:" >> dictionary.md
+
+    # check if delimiter key exists
+    delimiter_exists=$(jq '.resources['$i'].dialect.csv | has("delimiter")' datapackage.json)
+
+    # if delimiter key exists, add delimiter info to dictionary.md
+    if [ "$delimiter_exists" = "true" ]; then
+        delimiter=$(jq -r '.resources['$i'].dialect.csv.delimiter' datapackage.json)
+        echo "- Delimiter: \`$delimiter\`" >> dictionary.md
+    else
+        echo -e "⚠️ Dialect key not found for $filename"
+        echo "Delimiter info will not be added to $OUTPUT_FILENAME"
+    fi
+
     echo "- Encoding: \`$(cat datapackage.json | jq -r '.resources['$i'].encoding')\`" >> dictionary.md
     echo "" >> dictionary.md
 

@@ -95,6 +95,9 @@ resources:
     format: csv
     hashing: md5
     encoding: utf-8
+    dialect:
+      csv:
+        delimiter: ','
     schema:
       fields:
         - name: id_ospite

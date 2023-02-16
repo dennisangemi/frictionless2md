@@ -15,6 +15,8 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ├── metadata.md
 ├── requirements.txt
 ├── script.sh
+├── t-datapackage.yaml
+├── temp.sh
 ├── template.md
 └── test.json
 ```
@@ -23,7 +25,6 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ### 📄 [contenuti](data/contenuti.csv)
 - Path: `data/contenuti.csv`
 - URL:
-- Delimiter:
 - Encoding: `utf-8`
 
 | Field | Type | Description |
@@ -41,7 +42,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ### 📄 [ospiti](data/ospiti.csv)
 - Path: `data/ospiti.csv`
 - URL:
-- Delimiter:
+- Delimiter: `,`
 - Encoding: `utf-8`
 
 | Field | Type | Description |
@@ -55,7 +56,6 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ### 📄 [puntate](data/puntate.csv)
 - Path: `data/puntate.csv`
 - URL:
-- Delimiter:
 - Encoding: `utf-8`
 
 | Field | Type | Description |
@@ -68,7 +68,6 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ### 📄 [trasmissioni](data/trasmissioni.csv)
 - Path: `data/trasmissioni.csv`
 - URL:
-- Delimiter:
 - Encoding: `utf-8`
 
 | Field | Type | Description |

@@ -251,3 +251,12 @@ cat datapackage.json | jq '[.resources[0].schema.fields[] | {name, type, title, 
 ma questo non va perchè si mangia nome e cognome in ospiti ad esempio
 
 insomma bisogna giocare un po' con gli if e studiare map
+
+## delimiter exist
+```bash
+cat datapackage.yaml | yq '.resources[0].dialect.csv | has("delimiter")'
+```
+
+ritorna in output `true` se delimiter esiste
+
+se è true allora include encoding in metadata md prodotto
