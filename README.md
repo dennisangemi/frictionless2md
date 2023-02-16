@@ -3,6 +3,17 @@ A tool to convert frictionless metadata (datapackage.yaml or json) to markdown f
 
 > You can obtain a [markdown file like this](https://github.com/chiaraadornetto/dati-tv-elezioni-ue-2019#readme).
 
+## Set-up
+Download `script.sh` 
+```bash
+wget "https://raw.githubusercontent.com/dennisangemi/frictionless2md/main/script.sh"
+```
+
+make it executable
+```bash
+chmod +x script.sh
+```
+
 ## Usage
 Read [requirements.txt](requirements.txt) otherwise the bash script won't work.
 

@@ -1,4 +1,4 @@
-# Comunicare l'Unione Europea
+# null
 
 Analisi della copertura delle elezioni europee del 2019 nella televisione italiana (contenuti trasmessi da "#cartabianca" e "Dritto e Rovescio"). Dataset allegato alla tesi triennale di Chiara Adornetto
 
