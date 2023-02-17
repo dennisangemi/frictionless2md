@@ -8,14 +8,20 @@ DEFAULT_OUTPUT_FILENAME="METADATA.md"
 
 ### OPTIONS ###
 # parsing
-while getopts "o:" arg; do
+while getopts ":o:t" arg; do
   case $arg in
     o)
       output_file=$OPTARG
       ;;
-    *)
-      echo -e "❌ \e[31mError: option not found\e[0m"
-      echo "Usage: ./script.sh -o FILENAME.md"
+    t)
+      tree_flag="true"
+      ;;
+    \?)
+      echo -e "❌ \e[31mError. Invalid option: -$OPTARG \e[0m" 1>&2
+      exit 1
+      ;;
+    :)
+      echo -e "❌ \e[31mError. Option -$OPTARG requires an argument. \e[0m" 1>&2
       exit 1
       ;;
   esac
@@ -109,7 +115,15 @@ fi
 
 ### REPOSITORY STRUCTURE ###
 ### to be modified: add flag bla bla ###
-perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $output_file
+
+# if tree flag is set, add tree to $output_file
+if [ "$tree_flag" = "true" ]; then
+    perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $output_file
+else
+    perl -i -p -e 's/{{{repository-structure}}}/'"$(echo "")"'/g' $output_file
+    echo -e "⚠️  Warning: Tree flag (-t) not set"
+    echo "Your $output_file will not contain a repository structure"
+fi
 
 
 ### DATA DICTIONARY ###
@@ -166,8 +180,7 @@ do
     # add a line break
     echo "" >> dictionary.md
 done
-# add dictionary.md to $output_file
-# substitute {{{data-dictionary}}} with dictionary.md
+# add dictionary.md to $output_file: substitute {{{data-dictionary}}} with dictionary.md
 sed -i -e '/{{{data-dictionary}}}/r dictionary.md' -e '//d' $output_file
 
 
