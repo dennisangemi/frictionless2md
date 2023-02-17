@@ -131,11 +131,11 @@ do
     # print resource infos
     echo "### 📄 [$filename]($filepath)" >> $output_file
     echo "- Path: \`$filepath\`" >> $output_file
-    # echo "- URL:" >> dictionary.md
+    # echo "- URL:" >> $output_file
 
     # check if delimiter key exists
     key_existence_check=$(jq -r '.resources['$i'].dialect.csv | has("delimiter")' datapackage.json)
-    # if delimiter key exists, add delimiter info to dictionary.md
+    # if delimiter key exists, add delimiter info to $output_file
     if [ "$key_existence_check" = "true" ]; then
         delimiter=$(jq -r '.resources['$i'].dialect.csv.delimiter' datapackage.json)
         echo "- Delimiter: \`$delimiter\`" >> $output_file
@@ -205,10 +205,6 @@ fi
 
 
 ### CLEANUP ###
-# if dictionary.md exists, delete it
-if [ -f dictionary.md ]; then
-    rm dictionary.md
-fi
 # if package is yaml, delete json created
 if package_format="yaml"; then
     rm datapackage.json
