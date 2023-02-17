@@ -88,11 +88,33 @@ echo "## Repository structure
 
 
 ### PACKAGE TITLE ###
-# add title
-perl -i -p -e 's/{{{title}}}/'"$(cat datapackage.json | jq -r '.title')"'/g' $output_file
+
+# check if title key exists
+key_existence_check=$(cat datapackage.json | jq -r '. | has("title")')
+
+# if title key exists, add title to $output_file
+if [ "$key_existence_check" = "true" ]; then
+    perl -i -p -e 's/{{{title}}}/'"$(cat datapackage.json | jq -r '.title')"'/g' $output_file
+else
+    perl -i -p -e 's/{{{title}}}/'"$(echo "")"'/g' $output_file
+    echo -e "⚠️  Warning: Title key not found"
+    echo "Your $output_file will not contain a title"
+fi
 
 ### PACKAGE DESCRIPTION ###
-perl -i -p -e 's/{{{repository-description}}}/'"$(cat datapackage.json | jq -r '.description')"'/g' $output_file
+
+# check if description key exists
+key_existence_check=$(cat datapackage.json | jq -r '. | has("description")')
+
+# if description key exists, add description to $output_file
+if [ "$key_existence_check" = "true" ]; then
+    perl -i -p -e 's/{{{repository-description}}}/'"$(cat datapackage.json | jq -r '.description')"'/g' $output_file
+else
+    perl -i -p -e 's/{{{repository-description}}}/'"$(echo "")"'/g' $output_file
+    echo -e "⚠️  Warning: Description key not found"
+    echo "Your $output_file will not contain a description"
+fi
+
 
 ### REPORITORY STRUCTURE ###
 perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $output_file

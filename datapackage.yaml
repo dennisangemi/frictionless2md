@@ -31,6 +31,9 @@ resources:
     format: csv
     hashing: md5
     encoding: utf-8
+    dialect:
+      csv:
+        delimiter: ','
     schema:
       fields:
         - name: id_contenuto
@@ -123,6 +126,9 @@ resources:
     format: csv
     hashing: md5
     encoding: utf-8
+    dialect:
+      csv:
+        delimiter: ','
     schema:
       fields:
         - name: id_puntata
@@ -153,6 +159,9 @@ resources:
     format: csv
     hashing: md5
     encoding: utf-8
+    dialect:
+      csv:
+        delimiter: ','
     schema:
       fields:
         - name: trasmissione

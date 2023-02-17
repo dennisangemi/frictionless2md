@@ -1,4 +1,4 @@
-# null
+# Comunicare l'Unione Europea
 
 Analisi della copertura delle elezioni europee del 2019 nella televisione italiana (contenuti trasmessi da "#cartabianca" e "Dritto e Rovescio"). Dataset allegato alla tesi triennale di Chiara Adornetto
 
@@ -7,6 +7,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 .
 ├── METADATA.md
 ├── README.md
+├── backup_datapackage.yaml
 ├── bin
 │   └── template.md
 ├── data
@@ -24,6 +25,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ### 📄 [contenuti](data/contenuti.csv)
 - Path: `data/contenuti.csv`
 - URL:
+- Delimiter: `,`
 - Encoding: `utf-8`
 
 | Field | Type | Description |
@@ -55,6 +57,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ### 📄 [puntate](data/puntate.csv)
 - Path: `data/puntate.csv`
 - URL:
+- Delimiter: `,`
 - Encoding: `utf-8`
 
 | Field | Type | Description |
@@ -67,6 +70,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ### 📄 [trasmissioni](data/trasmissioni.csv)
 - Path: `data/trasmissioni.csv`
 - URL:
+- Delimiter: `,`
 - Encoding: `utf-8`
 
 | Field | Type | Description |
