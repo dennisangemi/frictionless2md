@@ -32,6 +32,15 @@ If you want to use a custom output filename you can use `-o` flag:
 ./script.sh -o customfilename.md
 ```
 
+**Add repository structure**
+
+If you want to add the tree of the folder where your datapackage is located you can add the `-t` flag:
+```bash
+./script.sh -t
+```
+
+This option requires the `tree` utility.
+
 ## Development
 `script.sh` is a bash script
 
