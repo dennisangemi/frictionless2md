@@ -18,9 +18,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ├── diary.md
 ├── requirements.txt
 ├── script.sh
-├── tmp_package.json
-├── unvalid.json
-└── valid.json
+└── tmp_package.json
 ```
 
 ## Data Dictionary 

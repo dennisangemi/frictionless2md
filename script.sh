@@ -34,22 +34,11 @@ fi
 
 
 ### CHECK IF DATAPACKAGE EXISTS ###
-# if datapckage.yaml exists, convert to json
+# if datapckage exists, set package format else exit
 if [ -f datapackage.yaml ]; then
-
-    # set package format
     package_format="yaml"
-
-    # convert to json
-    cat datapackage.yaml | yq . > datapackage.json
-
-# if datapackage.json exists
 elif [ -f datapackage.json ]; then
-
-    # set package format
     package_format="json"
-
-# if neither exists, exit
 else
     echo -e "❌ \e[31mError: datapackage not found\e[0m"
     echo "Please create a datapackage.json or datapackage.yaml file."
@@ -65,6 +54,11 @@ valid_package=$(frictionless validate datapackage.$package_format --pick-errors 
 # if package is valid
 if [ $valid_package = "true" ]; then
     echo "✅ datapackage is valid"
+
+    # if package is yaml, convert to json
+    if [ $package_format = "yaml" ]; then
+        yq . datapackage.yaml > datapackage.json
+    fi
 else
     echo -e "❌ \e[31mError: datapackage is invalid\e[0m"
     exit 1
