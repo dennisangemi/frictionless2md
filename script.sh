@@ -80,11 +80,7 @@ echo "## Repository structure
 ## Data Dictionary 
 {{{data-dictionary}}}
 
-## 📖 License
-{{{license}}}
-
-## 👥 Contributors
-{{{contributors}}}" >> $output_file
+" >> $output_file
 
 
 ### PACKAGE TITLE ###
@@ -119,22 +115,8 @@ fi
 ### REPORITORY STRUCTURE ###
 perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $output_file
 
-### PACKAGE LICENSE
-sed -i "s|{{{license}}}|$(echo "This work is licensed under a ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')") License")|g" $output_file
-
-### CONTRIBUTORS
-# contributors_table=$(cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat)
-# perl -i -p -e 's/{{{contributors}}}/'"$contributors_table"'/g' $output_file
-cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat > frct-contributors.md
-sed -i -e '/{{{contributors}}}/r frct-contributors.md' -e '//d' $output_file
-
-# if frct-contributors.md exists, delete it
-if [ -f frct-contributors.md ]; then
-    rm frct-contributors.md
-fi
 
 ### DATA DICTIONARY ###
-
 # count the number of resources
 n_resources=$(cat datapackage.json | jq -r '.resources[].name' | wc -l)
 
@@ -192,16 +174,46 @@ done
 # substitute {{{data-dictionary}}} with dictionary.md
 sed -i -e '/{{{data-dictionary}}}/r dictionary.md' -e '//d' $output_file
 
+
+### PACKAGE LICENSE ###
+# check if license key exists
+key_existence_check=$(cat datapackage.json | jq -r '. | has("licenses")')
+# if license key exists, add license to $output_file
+if [ "$key_existence_check" = "true" ]; then
+    echo "## 📖 License" >> $output_file
+    echo "This work is licensed under a ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')") License" >> $output_file
+    # add a line break
+    echo "" >> $output_file
+else
+    echo -e "⚠️  Warning: License key not found"
+    echo "Your $output_file will not contain a license"
+fi
+
+
+### PACKAGE CONTRIBUTORS ###
+# check if contributors key exists
+key_existence_check=$(cat datapackage.json | jq -r '. | has("contributors")')
+# if contributors key exists, add contributors table to $output_file
+if [ "$key_existence_check" = "true" ]; then
+    # print contributors title to $output_file
+    echo "## 👥 Contributors" >> $output_file
+    # add contributors table to $output_file
+    cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat >> $output_file
+else
+    echo -e "⚠️  Warning: Contributors key not found"
+    echo "Your $output_file will not contain a contributors table"
+fi
+
+
 ### CLEANUP
-
-# delete dictionary.md
-rm dictionary.md
-
+# if dictionary.md exists, delete it
+if [ -f dictionary.md ]; then
+    rm dictionary.md
+fi
 # if package is yaml, delete json created
 if package_format="yaml"; then
     rm datapackage.json
 fi
 
 ### END
-
 echo "✅ $output_file created"

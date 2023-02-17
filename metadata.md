@@ -81,6 +81,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 | numero | integer | Numerazione LCN nazionale dei canali TV |
 
 
+
 ## 📖 License
 This work is licensed under a [Creative Commons Attribution 4.0 ](https://creativecommons.org/licenses/by/4.0/) (CC-BY-4.0) License
 
