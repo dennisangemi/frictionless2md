@@ -59,6 +59,16 @@ fi
 # confirm existance
 echo "✅ datapackage exists"
 
+### CHECK DATAPACKAGE VALIDITY ###
+# WIP #16
+valid_package=$(frictionless validate datapackage.$package_format --pick-errors "package-error" --json | jq '.tasks | has(0)')
+# if package is valid
+if [ $valid_package = "true" ]; then
+    echo "✅ datapackage is valid"
+else
+    echo -e "❌ \e[31mError: datapackage is invalid\e[0m"
+    exit 1
+fi
 
 ### SETUP TEMPLATE ###
 # to be modified #14
