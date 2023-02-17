@@ -5,8 +5,8 @@ set -e
 # set default output filename
 DEFAULT_OUTPUT_FILENAME="METADATA.md"
 
-### OPTIONS ###
 
+### OPTIONS ###
 # parsing
 while getopts "o:" arg; do
   case $arg in
@@ -20,12 +20,12 @@ while getopts "o:" arg; do
       ;;
   esac
 done
-
 # if output file is not set, use default
 if [ -z $output_file ]; then
     output_file=$DEFAULT_OUTPUT_FILENAME
     # echo "Using default output filename: $output_file"
 fi
+
 
 ### CHECK IF DATAPACKAGE EXISTS ###
 # if datapckage.yaml exists, convert to json
@@ -55,19 +55,15 @@ echo "✅ datapackage exists"
 
 
 ### SETUP TEMPLATE ###
-# copy template (to be modified)
-# cp template.md $output_file
-
+# to be modified #14
 echo "Building $output_file..."
-
 # if $output_file exists, delete it
 if [ -f $output_file ]; then
     rm $output_file
 fi
-
 # create new $output_file
 touch $output_file
-
+# add template to $output_file
 echo "# {{{title}}}
 " >> $output_file
 echo "{{{repository-description}}}
@@ -84,10 +80,9 @@ echo "## Repository structure
 
 
 ### PACKAGE TITLE ###
-
+### to be modified: don't use template ###
 # check if title key exists
 key_existence_check=$(cat datapackage.json | jq -r '. | has("title")')
-
 # if title key exists, add title to $output_file
 if [ "$key_existence_check" = "true" ]; then
     perl -i -p -e 's/{{{title}}}/'"$(cat datapackage.json | jq -r '.title')"'/g' $output_file
@@ -97,11 +92,11 @@ else
     echo "Your $output_file will not contain a title"
 fi
 
-### PACKAGE DESCRIPTION ###
 
+### PACKAGE DESCRIPTION ###
+### to be modified: don't use template ###
 # check if description key exists
 key_existence_check=$(cat datapackage.json | jq -r '. | has("description")')
-
 # if description key exists, add description to $output_file
 if [ "$key_existence_check" = "true" ]; then
     perl -i -p -e 's/{{{repository-description}}}/'"$(cat datapackage.json | jq -r '.description')"'/g' $output_file
@@ -112,22 +107,21 @@ else
 fi
 
 
-### REPORITORY STRUCTURE ###
+### REPOSITORY STRUCTURE ###
+### to be modified: add flag bla bla ###
 perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $output_file
 
 
 ### DATA DICTIONARY ###
+### to be modified: don't use template ###
 # count the number of resources
 n_resources=$(cat datapackage.json | jq -r '.resources[].name' | wc -l)
-
 # if dictionary.md exists, delete it
 if [ -f dictionary.md ]; then
     rm dictionary.md
 fi
-
 # create temp file dictionary.md
 touch dictionary.md
-
 # loop over resources
 for (( i=0; i<$n_resources; i++ ))
 do
@@ -164,13 +158,15 @@ do
     # convert frct-schema-$i.csv to markdown
     mlr --c2m cat frct-schema-$i.csv >> dictionary.md
 
-    # rm frct-schema-$i.csv
-    rm frct-schema-$i.csv
+    # if frct-schema-$i.csv exists, delete it
+    if [ -f frct-schema-$i.csv ]; then
+        rm frct-schema-$i.csv
+    fi
 
     # add a line break
     echo "" >> dictionary.md
 done
-
+# add dictionary.md to $output_file
 # substitute {{{data-dictionary}}} with dictionary.md
 sed -i -e '/{{{data-dictionary}}}/r dictionary.md' -e '//d' $output_file
 
@@ -205,7 +201,7 @@ else
 fi
 
 
-### CLEANUP
+### CLEANUP ###
 # if dictionary.md exists, delete it
 if [ -f dictionary.md ]; then
     rm dictionary.md
@@ -215,5 +211,6 @@ if package_format="yaml"; then
     rm datapackage.json
 fi
 
-### END
+
+### END ###
 echo "✅ $output_file created"
