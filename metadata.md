@@ -9,6 +9,7 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 ├── README.md
 ├── backup_datapackage.yaml
 ├── bin
+│   ├── notemplatedependency.sh
 │   └── template.md
 ├── data
 │   ├── dialect.json
@@ -21,10 +22,9 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 └── tmp_package.json
 ```
 
-## Data Dictionary 
+## Data Dictionary
 ### 📄 [contenuti](data/contenuti.csv)
 - Path: `data/contenuti.csv`
-- URL:
 - Delimiter: `,`
 - Encoding: `utf-8`
 
@@ -42,7 +42,6 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 
 ### 📄 [ospiti](data/ospiti.csv)
 - Path: `data/ospiti.csv`
-- URL:
 - Delimiter: `,`
 - Encoding: `utf-8`
 
@@ -56,7 +55,6 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 
 ### 📄 [puntate](data/puntate.csv)
 - Path: `data/puntate.csv`
-- URL:
 - Delimiter: `,`
 - Encoding: `utf-8`
 
@@ -69,7 +67,6 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 
 ### 📄 [trasmissioni](data/trasmissioni.csv)
 - Path: `data/trasmissioni.csv`
-- URL:
 - Delimiter: `,`
 - Encoding: `utf-8`
 
@@ -79,8 +76,6 @@ Analisi della copertura delle elezioni europee del 2019 nella televisione italia
 | rete | string | Denominazione della rete televisiva |
 | canale | string | Denominazione del canale televisivo |
 | numero | integer | Numerazione LCN nazionale dei canali TV |
-
-
 
 ## 📖 License
 This work is licensed under a [Creative Commons Attribution 4.0 ](https://creativecommons.org/licenses/by/4.0/) (CC-BY-4.0) License

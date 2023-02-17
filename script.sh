@@ -48,6 +48,7 @@ fi
 # confirm existance
 echo "✅ datapackage exists"
 
+
 ### CHECK DATAPACKAGE VALIDITY ###
 # WIP #16
 valid_package=$(frictionless validate datapackage.$package_format --pick-errors "package-error" --json | jq '.tasks | has(0)')
@@ -64,8 +65,8 @@ else
     exit 1
 fi
 
-### SETUP TEMPLATE ###
-# to be modified #14
+
+### SETUP $output_file ###
 echo "Building $output_file..."
 # if $output_file exists, delete it
 if [ -f $output_file ]; then
@@ -73,73 +74,52 @@ if [ -f $output_file ]; then
 fi
 # create new $output_file
 touch $output_file
-# add template to $output_file
-echo "# {{{title}}}
-" >> $output_file
-echo "{{{repository-description}}}
-" >> $output_file
-echo "## Repository structure 
-\`\`\`
-{{{repository-structure}}}
-\`\`\`
-
-## Data Dictionary 
-{{{data-dictionary}}}
-
-" >> $output_file
 
 
 ### PACKAGE TITLE ###
-### to be modified: don't use template ###
 # check if title key exists
-key_existence_check=$(cat datapackage.json | jq -r '. | has("title")')
+key_existence_check=$(jq -r '. | has("title")' datapackage.json)
 # if title key exists, add title to $output_file
 if [ "$key_existence_check" = "true" ]; then
-    perl -i -p -e 's/{{{title}}}/'"$(cat datapackage.json | jq -r '.title')"'/g' $output_file
+    echo "#" "$(cat datapackage.json | jq -r '.title')" >> $output_file
+    echo "" >> $output_file
 else
-    perl -i -p -e 's/{{{title}}}/'"$(echo "")"'/g' $output_file
     echo -e "⚠️  Warning: Title key not found"
     echo "Your $output_file will not contain a title"
 fi
 
 
 ### PACKAGE DESCRIPTION ###
-### to be modified: don't use template ###
 # check if description key exists
-key_existence_check=$(cat datapackage.json | jq -r '. | has("description")')
+key_existence_check=$(jq -r '. | has("description")' datapackage.json)
 # if description key exists, add description to $output_file
 if [ "$key_existence_check" = "true" ]; then
-    perl -i -p -e 's/{{{repository-description}}}/'"$(cat datapackage.json | jq -r '.description')"'/g' $output_file
+    echo "$(cat datapackage.json | jq -r '.description')" >> $output_file
+    echo "" >> $output_file
 else
-    perl -i -p -e 's/{{{repository-description}}}/'"$(echo "")"'/g' $output_file
     echo -e "⚠️  Warning: Description key not found"
     echo "Your $output_file will not contain a description"
 fi
 
 
 ### REPOSITORY STRUCTURE ###
-### to be modified: add flag bla bla ###
-
 # if tree flag is set, add tree to $output_file
 if [ "$tree_flag" = "true" ]; then
-    perl -i -p -e 's/{{{repository-structure}}}/'"$(tree | head -n -2)"'/g' $output_file
+    echo "## Repository structure " >> $output_file
+    echo "\`\`\`" >> $output_file
+    echo "$(tree | head -n -2)" >> $output_file
+    echo "\`\`\`" >> $output_file
+    echo "" >> $output_file
 else
-    perl -i -p -e 's/{{{repository-structure}}}/'"$(echo "")"'/g' $output_file
     echo -e "⚠️  Warning: Tree flag (-t) not set"
     echo "Your $output_file will not contain a repository structure"
 fi
 
 
 ### DATA DICTIONARY ###
-### to be modified: don't use template ###
+echo "## Data Dictionary" >> $output_file
 # count the number of resources
 n_resources=$(cat datapackage.json | jq -r '.resources[].name' | wc -l)
-# if dictionary.md exists, delete it
-if [ -f dictionary.md ]; then
-    rm dictionary.md
-fi
-# create temp file dictionary.md
-touch dictionary.md
 # loop over resources
 for (( i=0; i<$n_resources; i++ ))
 do
@@ -149,32 +129,41 @@ do
     title=$(cat datapackage.json | jq -r '.resources['$i'].title')
 
     # print resource infos
-    echo "### 📄 [$filename]($filepath)" >> dictionary.md
-    echo "- Path: \`$filepath\`" >> dictionary.md
-    echo "- URL:" >> dictionary.md
+    echo "### 📄 [$filename]($filepath)" >> $output_file
+    echo "- Path: \`$filepath\`" >> $output_file
+    # echo "- URL:" >> dictionary.md
 
     # check if delimiter key exists
-    delimiter_exists=$(jq '.resources['$i'].dialect.csv | has("delimiter")' datapackage.json)
-
+    key_existence_check=$(jq -r '.resources['$i'].dialect.csv | has("delimiter")' datapackage.json)
     # if delimiter key exists, add delimiter info to dictionary.md
-    if [ "$delimiter_exists" = "true" ]; then
+    if [ "$key_existence_check" = "true" ]; then
         delimiter=$(jq -r '.resources['$i'].dialect.csv.delimiter' datapackage.json)
-        echo "- Delimiter: \`$delimiter\`" >> dictionary.md
+        echo "- Delimiter: \`$delimiter\`" >> $output_file
     else
         echo -e "⚠️  Warning: Dialect key not found for $filename"
         echo "Delimiter info will not be added to $output_file"
     fi
 
-    echo "- Encoding: \`$(cat datapackage.json | jq -r '.resources['$i'].encoding')\`" >> dictionary.md
-    echo "" >> dictionary.md
+    # check if encoding key exists
+    key_existence_check=$(jq '.resources['$i'] | has("encoding")' datapackage.json)
+    # if encoding key exists, add encoding info to $output_file
+    if [ "$key_existence_check" = "true" ]; then
+        echo "- Encoding: \`$(cat datapackage.json | jq -r '.resources['$i'].encoding')\`" >> $output_file
+    else
+        echo -e "⚠️  Warning: Encoding key not found for $filename"
+        echo "Encoding info will not be added to $output_file"
+    fi
+
+    # add line break
+    echo "" >> $output_file
 
     # create csv table
     cat datapackage.json | jq '[.resources['$i'].schema.fields[] | {Field: .name, Type: .type, Description: .description}]' | mlr --j2c cat > frct-schema-$i.csv
-    # cat datapackage.json | jq '[.resources[0].schema.fields[] | {name, type, title, description} | {Field: .name, Type: .type, Description: ((.title // "") + if .description then ": " else "" end + (.description // ""))}]' | mlr --j2c cat > frct-schema-$i.csv
-    # join frct-schema-$i.csv with first 2 line of $path (transposed) to get the column example
+    
+    # this is the line that reminds me that I have to add example column to frct-schema-$i.csv
 
-    # convert frct-schema-$i.csv to markdown
-    mlr --c2m cat frct-schema-$i.csv >> dictionary.md
+    # convert frct-schema-$i.csv to markdown and add to $output_file
+    mlr --c2m cat frct-schema-$i.csv >> $output_file
 
     # if frct-schema-$i.csv exists, delete it
     if [ -f frct-schema-$i.csv ]; then
@@ -182,20 +171,17 @@ do
     fi
 
     # add a line break
-    echo "" >> dictionary.md
+    echo "" >> $output_file
 done
-# add dictionary.md to $output_file: substitute {{{data-dictionary}}} with dictionary.md
-sed -i -e '/{{{data-dictionary}}}/r dictionary.md' -e '//d' $output_file
 
 
 ### PACKAGE LICENSE ###
 # check if license key exists
-key_existence_check=$(cat datapackage.json | jq -r '. | has("licenses")')
+key_existence_check=$(jq -r '. | has("licenses")' datapackage.json)
 # if license key exists, add license to $output_file
 if [ "$key_existence_check" = "true" ]; then
     echo "## 📖 License" >> $output_file
     echo "This work is licensed under a ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')") License" >> $output_file
-    # add a line break
     echo "" >> $output_file
 else
     echo -e "⚠️  Warning: License key not found"
