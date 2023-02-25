@@ -51,9 +51,9 @@ echo "✅ datapackage exists"
 
 ### CHECK DATAPACKAGE VALIDITY ###
 # WIP #16
-valid_package=$(frictionless validate datapackage.$package_format --pick-errors "package-error" --json | jq '.tasks | has(0)')
+valid_key_check=$(frictionless validate datapackage.$package_format --pick-errors "package-error" --json | jq '.tasks | has(0)')
 # if package is valid
-if [ $valid_package = "true" ]; then
+if [ $valid_key_check = "true" ]; then
     echo "✅ datapackage is valid"
 
     # if package is yaml, convert to json
@@ -78,9 +78,9 @@ touch $output_file
 
 ### PACKAGE TITLE ###
 # check if title key exists
-key_existence_check=$(jq -r '. | has("title")' datapackage.json)
+valid_key_check=$(jq -r '. | has("title")' datapackage.json)
 # if title key exists, add title to $output_file
-if [ "$key_existence_check" = "true" ]; then
+if [ "$valid_key_check" = "true" ]; then
     echo "#" "$(cat datapackage.json | jq -r '.title')" >> $output_file
     echo "" >> $output_file
 else
@@ -91,9 +91,9 @@ fi
 
 ### PACKAGE DESCRIPTION ###
 # check if description key exists
-key_existence_check=$(jq -r '. | has("description")' datapackage.json)
+valid_key_check=$(jq -r '. | has("description")' datapackage.json)
 # if description key exists, add description to $output_file
-if [ "$key_existence_check" = "true" ]; then
+if [ "$valid_key_check" = "true" ]; then
     echo "$(cat datapackage.json | jq -r '.description')" >> $output_file
     echo "" >> $output_file
 else
@@ -133,9 +133,9 @@ do
 
     # print resource description
     # check if description key exists
-    key_existence_check=$(jq -r '.resources['$i'] | has("description")' datapackage.json)
+    valid_key_check=$(jq -r '.resources['$i'] | has("description")' datapackage.json)
     # if description key exists, add description to $output_file
-    if [ "$key_existence_check" = "true" ]; then
+    if [ "$valid_key_check" = "true" ]; then
         
         echo "$(cat datapackage.json | jq -r '.resources['$i'].description')" >> $output_file
     else
@@ -147,9 +147,9 @@ do
     echo "- Path: \`$filepath\`" >> $output_file
 
     # check if delimiter key exists
-    key_existence_check=$(jq -r '.resources['$i'].dialect.csv | has("delimiter")' datapackage.json)
+    valid_key_check=$(jq -r '.resources['$i'].dialect.csv | has("delimiter")' datapackage.json)
     # if delimiter key exists, add delimiter info to $output_file
-    if [ "$key_existence_check" = "true" ]; then
+    if [ "$valid_key_check" = "true" ]; then
         delimiter=$(jq -r '.resources['$i'].dialect.csv.delimiter' datapackage.json)
         echo "- Delimiter: \`$delimiter\`" >> $output_file
     else
@@ -158,9 +158,9 @@ do
     fi
 
     # check if encoding key exists
-    key_existence_check=$(jq '.resources['$i'] | has("encoding")' datapackage.json)
+    valid_key_check=$(jq '.resources['$i'] | has("encoding")' datapackage.json)
     # if encoding key exists, add encoding info to $output_file
-    if [ "$key_existence_check" = "true" ]; then
+    if [ "$valid_key_check" = "true" ]; then
         echo "- Encoding: \`$(cat datapackage.json | jq -r '.resources['$i'].encoding')\`" >> $output_file
     else
         echo -e "⚠️  Warning: Encoding key not found for $filename"
@@ -190,9 +190,9 @@ done
 
 ### PACKAGE LICENSE ###
 # check if license key exists
-key_existence_check=$(jq -r '. | has("licenses")' datapackage.json)
+valid_key_check=$(jq -r '. | has("licenses")' datapackage.json)
 # if license key exists, add license to $output_file
-if [ "$key_existence_check" = "true" ]; then
+if [ "$valid_key_check" = "true" ]; then
     echo "## 📖 License" >> $output_file
     echo "This work is licensed under a ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')") License" >> $output_file
     echo "" >> $output_file
@@ -204,9 +204,9 @@ fi
 
 ### PACKAGE CONTRIBUTORS ###
 # check if contributors key exists
-key_existence_check=$(cat datapackage.json | jq -r '. | has("contributors")')
+valid_key_check=$(cat datapackage.json | jq -r '. | has("contributors")')
 # if contributors key exists, add contributors table to $output_file
-if [ "$key_existence_check" = "true" ]; then
+if [ "$valid_key_check" = "true" ]; then
     # print contributors title to $output_file
     echo "## 👥 Contributors" >> $output_file
     # add contributors table to $output_file
