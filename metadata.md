@@ -2,10 +2,31 @@
 
 Analisi della copertura delle elezioni europee del 2019 nella televisione italiana (contenuti trasmessi da "#cartabianca" e "Dritto e Rovescio"). Dataset allegato alla tesi triennale di Chiara Adornetto
 
+## Repository structure 
+```
+.
+├── METADATA.md
+├── README.md
+├── backup_datapackage.yaml
+├── bin
+│   ├── notemplatedependency.sh
+│   └── template.md
+├── data
+│   ├── dialect.json
+│   └── trasmissioni.csv
+├── datapackage.json
+├── datapackage.yaml
+├── diary.md
+├── requirements.txt
+├── script.sh
+└── tmp_package.json
+```
+
 ## Data Dictionary
 ### 📄 [contenuti](data/contenuti.csv)
 Classificazione dei contenuti trasmessi
 - Path: `data/contenuti.csv`
+- URL: https://raw.githubusercontent.com/chiaraadornetto/dati-tv-elezioni-ue-2019/main/data/contenuti.csv
 - Delimiter: `,`
 - Encoding: `utf-8`
 
@@ -24,6 +45,7 @@ Classificazione dei contenuti trasmessi
 ### 📄 [ospiti](data/ospiti.csv)
 Anagrafica degli ospiti intervenuti durante la messa in onda delle trasmissioni
 - Path: `data/ospiti.csv`
+- URL: https://raw.githubusercontent.com/chiaraadornetto/dati-tv-elezioni-ue-2019/main/data/ospiti.csv
 - Delimiter: `,`
 - Encoding: `utf-8`
 
@@ -38,6 +60,7 @@ Anagrafica degli ospiti intervenuti durante la messa in onda delle trasmissioni
 ### 📄 [puntate](data/puntate.csv)
 Anagrafica delle puntate trasmesse
 - Path: `data/puntate.csv`
+- URL: https://raw.githubusercontent.com/chiaraadornetto/dati-tv-elezioni-ue-2019/main/data/puntate.csv
 - Delimiter: `,`
 - Encoding: `utf-8`
 
@@ -51,6 +74,7 @@ Anagrafica delle puntate trasmesse
 ### 📄 [trasmissioni](data/trasmissioni.csv)
 Anagrafica delle trasmissioni
 - Path: `data/trasmissioni.csv`
+- URL: https://raw.githubusercontent.com/chiaraadornetto/dati-tv-elezioni-ue-2019/main/data/trasmissioni.csv
 - Delimiter: `,`
 - Encoding: `utf-8`
 
