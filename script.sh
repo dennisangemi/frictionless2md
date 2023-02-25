@@ -8,48 +8,48 @@ DEFAULT_OUTPUT_FILENAME="METADATA.md"
 
 ### OPTIONS ###
 while getopts ":o:u:t" arg; do
-  case $arg in
-    o)
-      output_file=$OPTARG
-      ;;
-    t)
-      tree_flag="true"
-      ;;
-    u)
-      user_repo=$OPTARG
-      # check validity of user_repo
-      if [[ "$user_repo" == *"/"* ]]; then
-        # store username and repository name in variables
-        username=$(echo $user_repo | cut -d'/' -f1)
-        repository=$(echo $user_repo | cut -d'/' -f2)
+    case $arg in
+        o)
+            output_file=$OPTARG
+            ;;
+        t)
+            tree_flag="true"
+            ;;
+        u)
+            user_repo=$OPTARG
+            # check validity of user_repo
+            if [[ "$user_repo" == *"/"* ]]; then
+                # store username and repository name in variables
+                username=$(echo $user_repo | cut -d'/' -f1)
+                repository=$(echo $user_repo | cut -d'/' -f2)
 
-        # check if username is empty
-        if [ -z "$username" ]; then
-            echo -e "❌ \e[31mError: Option -u requires a GitHub username\e[0m"
+                # check if username is empty
+                if [ -z "$username" ]; then
+                    echo -e "❌ \e[31mError: Option -u requires a GitHub username\e[0m"
+                    exit 1
+                fi
+
+                # check if repository is empty
+                if [ -z "$repository" ]; then
+                    echo -e "❌ \e[31mError: Option -u requires a repository name\e[0m"
+                    exit 1
+                fi
+
+                echo "✅ Github username and repository name are valid."
+            else
+                echo -e "❌ \e[31mError: syntax is not correct. The argument must contain a github username and a repository name splitted by a slash.\e[0m"
+                exit 1
+            fi
+            ;;
+        \?)
+            echo -e "❌ \e[31mError. Invalid option: -$OPTARG \e[0m" 1>&2
             exit 1
-        fi
-
-        # check if repository is empty
-        if [ -z "$repository" ]; then
-            echo -e "❌ \e[31mError: Option -u requires a repository name\e[0m"
+            ;;
+        :)
+            echo -e "❌ \e[31mError. Option -$OPTARG requires an argument. \e[0m" 1>&2
             exit 1
-        fi
-
-        echo "✅ Github username and repository name are valid."
-      else
-          echo -e "❌ \e[31mError: syntax is not correct. The argument must contain a github username and a repository name splitted by a slash.\e[0m"
-          exit 1
-      fi
-      ;;
-    \?)
-      echo -e "❌ \e[31mError. Invalid option: -$OPTARG \e[0m" 1>&2
-      exit 1
-      ;;
-    :)
-      echo -e "❌ \e[31mError. Option -$OPTARG requires an argument. \e[0m" 1>&2
-      exit 1
-      ;;
-  esac
+            ;;
+    esac
 done
 
 # if output file is not set, use default
