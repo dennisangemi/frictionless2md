@@ -46,7 +46,7 @@ This option requires the `tree` utility.
 You can add "- URL" to the bulleted list of the output (Data dictionary section) specifying the flag `-u` followed by your GitHub username and the repository name (`username/repo`):
 
 ```bash
-./script -u dennisangemi/frictionless2md
+./script.sh -u dennisangemi/frictionless2md
 ```
 
 
