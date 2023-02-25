@@ -128,10 +128,23 @@ do
     filepath=$(cat datapackage.json | jq -r '.resources['$i'].path')
     title=$(cat datapackage.json | jq -r '.resources['$i'].title')
 
-    # print resource infos
+    # print resource name
     echo "### 📄 [$filename]($filepath)" >> $output_file
+
+    # print resource description
+    # check if description key exists
+    key_existence_check=$(jq -r '.resources['$i'] | has("description")' datapackage.json)
+    # if description key exists, add description to $output_file
+    if [ "$key_existence_check" = "true" ]; then
+        
+        echo "$(cat datapackage.json | jq -r '.resources['$i'].description')" >> $output_file
+    else
+        echo -e "⚠️  Warning: Description key not found for $filename"
+        echo "Description info will not be added to $output_file"
+    fi
+
+    # print resource path
     echo "- Path: \`$filepath\`" >> $output_file
-    # echo "- URL:" >> $output_file
 
     # check if delimiter key exists
     key_existence_check=$(jq -r '.resources['$i'].dialect.csv | has("delimiter")' datapackage.json)
