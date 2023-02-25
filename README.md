@@ -25,14 +25,14 @@ in a directory where a datapackage is located and the default output file will b
 
 ### Options
 
-**Set custom output filename `-o`**
+**`-o` Set custom output filename**
 
 If you want to use a custom output filename you can use `-o` flag:
 ```bash
 ./script.sh -o customfilename.md
 ```
 
-**Add repository structure `-t`**
+**`-t` Add repository structure**
 
 If you want to add the tree of the folder where your datapackage is located you can add the `-t` flag:
 ```bash
@@ -41,7 +41,7 @@ If you want to add the tree of the folder where your datapackage is located you 
 
 This option requires the `tree` utility.
 
-**Add GitHub URLs to files `-u`**
+**`-u` Add GitHub URLs to files**
 
 You can add "- URL" to the bulleted list of the output (Data dictionary section) specifying the flag `-u` followed by your GitHub username and the repository name (`username/repo`):
 
