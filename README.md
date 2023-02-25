@@ -1,5 +1,5 @@
 # 🔧 frictionless2md
-A tool to convert frictionless metadata (datapackage.yaml or json) to markdown file (that can be used as README).
+A tool to convert frictionless datapackage (YAML or JSON) to markdown file (that can be used as README).
 
 > You can obtain a [markdown file like this](https://github.com/chiaraadornetto/dati-tv-elezioni-ue-2019#readme).
 
