@@ -6,6 +6,7 @@
 # metadata: data/contenuti.csv data/ospiti.csv data/puntate.csv data/trasmissioni.csv
 # --------
 
+profile: data-package
 name: dati-tv-elezioni-ue-2019
 title: Comunicare l'Unione Europea
 description: Analisi della copertura delle elezioni europee del 2019 nella televisione italiana (contenuti trasmessi da "#cartabianca" e "Dritto e Rovescio"). Dataset allegato alla tesi triennale di Chiara Adornetto
@@ -25,7 +26,8 @@ licenses:
     path: https://creativecommons.org/licenses/by/4.0/
 resources:
   - name: contenuti
-    path: data/contenuti.csv    
+    path: data/contenuti.csv
+    description: Classificazione dei contenuti trasmessi
     profile: tabular-data-resource
     scheme: file
     format: csv
@@ -92,7 +94,8 @@ resources:
 #              - id_ospite
 #            resource: ospiti
   - name: ospiti
-    path: data/ospiti.csv    
+    path: data/ospiti.csv
+    description: Anagrafica degli ospiti intervenuti durante la messa in onda delle trasmissioni
     profile: tabular-data-resource
     scheme: file
     format: csv
@@ -121,6 +124,7 @@ resources:
           description: Testa giornalistica o partito politico di appartenenza
   - name: puntate
     path: data/puntate.csv
+    description: Anagrafica delle puntate trasmesse
     profile: tabular-data-resource
     scheme: file
     format: csv
@@ -153,7 +157,8 @@ resources:
               - trasmissione
             resource: trasmissioni
   - name: trasmissioni
-    path: data/trasmissioni.csv    
+    path: data/trasmissioni.csv
+    description: Anagrafica delle trasmissioni 
     profile: tabular-data-resource
     scheme: file
     format: csv
@@ -176,4 +181,4 @@ resources:
         - name: numero
           type: integer          
           description: Numerazione LCN nazionale dei canali TV
-profile: data-package
+
