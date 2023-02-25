@@ -41,6 +41,15 @@ If you want to add the tree of the folder where your datapackage is located you 
 
 This option requires the `tree` utility.
 
+**Add GitHub URLs to files**
+
+You can add "- URL" to the bulleted list of the output (Data dictionary section) specifying the flag `-u` followed by your GitHub username and the repository name (`username/repo`):
+
+```bash
+./script -u dennisangemi/frictionless2md
+```
+
+
 ## Development
 `script.sh` is a bash script
 

@@ -7,14 +7,39 @@ DEFAULT_OUTPUT_FILENAME="METADATA.md"
 
 
 ### OPTIONS ###
-# parsing
-while getopts ":o:t" arg; do
+while getopts ":o:u:t" arg; do
   case $arg in
     o)
       output_file=$OPTARG
       ;;
     t)
       tree_flag="true"
+      ;;
+    u)
+      user_repo=$OPTARG
+      # check validity of user_repo
+      if [[ "$user_repo" == *"/"* ]]; then
+        # store username and repository name in variables
+        username=$(echo $user_repo | cut -d'/' -f1)
+        repository=$(echo $user_repo | cut -d'/' -f2)
+
+        # check if username is empty
+        if [ -z "$username" ]; then
+            echo -e "❌ \e[31mError: Option -u requires a GitHub username\e[0m"
+            exit 1
+        fi
+
+        # check if repository is empty
+        if [ -z "$repository" ]; then
+            echo -e "❌ \e[31mError: Option -u requires a repository name\e[0m"
+            exit 1
+        fi
+
+        echo "✅ Github username and repository name are valid."
+      else
+          echo -e "❌ \e[31mError: syntax is not correct. The argument must contain a github username and a repository name splitted by a slash.\e[0m"
+          exit 1
+      fi
       ;;
     \?)
       echo -e "❌ \e[31mError. Invalid option: -$OPTARG \e[0m" 1>&2
@@ -26,6 +51,7 @@ while getopts ":o:t" arg; do
       ;;
   esac
 done
+
 # if output file is not set, use default
 if [ -z $output_file ]; then
     output_file=$DEFAULT_OUTPUT_FILENAME
@@ -34,6 +60,7 @@ fi
 
 
 ### CHECK IF DATAPACKAGE EXISTS ###
+echo "🔍 Checking datapackage..."
 # if datapckage exists, set package format else exit
 if [ -f datapackage.yaml ]; then
     package_format="yaml"
@@ -145,6 +172,11 @@ do
 
     # print resource path
     echo "- Path: \`$filepath\`" >> $output_file
+
+    # print url if user_repo is set
+    if [ -n "$user_repo" ]; then
+        echo "- URL: https://raw.githubusercontent.com/$username/$repository/main/$filepath" >> $output_file
+    fi
 
     # check if delimiter key exists
     valid_key_check=$(jq -r '.resources['$i'].dialect.csv | has("delimiter")' datapackage.json)
