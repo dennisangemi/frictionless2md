@@ -42,11 +42,11 @@ while getopts ":o:u:t" arg; do
             fi
             ;;
         \?)
-            echo -e "❌ \e[31mError. Invalid option: -$OPTARG \e[0m" 1>&2
+            echo -e "❌ \e[31mError: Invalid option -$OPTARG \e[0m" 1>&2
             exit 1
             ;;
         :)
-            echo -e "❌ \e[31mError. Option -$OPTARG requires an argument. \e[0m" 1>&2
+            echo -e "❌ \e[31mError: Option -$OPTARG requires an argument. \e[0m" 1>&2
             exit 1
             ;;
     esac
