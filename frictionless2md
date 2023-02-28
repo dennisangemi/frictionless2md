@@ -269,7 +269,7 @@ fi
 
 ### CLEANUP ###
 # if package is yaml, delete json created
-if package_format="yaml"; then
+if [ "$package_format" = "yaml" ]; then
     rm datapackage.json
 fi
 
