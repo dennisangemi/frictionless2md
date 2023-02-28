@@ -202,17 +202,35 @@ do
     # add line break
     echo "" >> $output_file
 
-    # create csv table
+    # create schema csv table
     cat datapackage.json | jq '[.resources['$i'].schema.fields[] | {Field: .name, Type: .type, Description: .description}]' | mlr --j2c cat > frct-schema-$i.csv
     
-    # this is the line that reminds me that I have to add example column to frct-schema-$i.csv
+    # if $filepath exists, create example csv table (transpose first row of $filepath)
+    if [ -f $filepath ]; then
+        # create header
+        echo "Field,Example" >> frct-example-$i.csv
 
+        # transpose first row of $filepath
+        mlr --csv head -n 1 $filepath | mlr --csv -N put -q 'for (k,v in $*) { @arr[k][NR] = v } end { emit @arr }' >> frct-example-$i.csv
+
+        # join schema and example csv tables
+        mlr --csv join -j Field -f frct-schema-$i.csv frct-example-$i.csv > tmp-frct-schema-$i.csv
+        mv tmp-frct-schema-$i.csv frct-schema-$i.csv
+    else
+        echo "⚠️  Warning: $filepath not found. Your $output_file will not contain the example column."
+    fi
+    
     # convert frct-schema-$i.csv to markdown and add to $output_file
     mlr --c2m cat frct-schema-$i.csv >> $output_file
 
     # if frct-schema-$i.csv exists, delete it
     if [ -f frct-schema-$i.csv ]; then
         rm frct-schema-$i.csv
+    fi
+
+    # if frct-example-$i.csv exists, delete it
+    if [ -f frct-example-$i.csv ]; then
+        rm frct-example-$i.csv
     fi
 
     # add a line break
