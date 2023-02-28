@@ -25,19 +25,19 @@ while getopts ":o:u:t" arg; do
 
                 # check if username is empty
                 if [ -z "$username" ]; then
-                    echo -e "❌ \e[31mError: Option -u requires a GitHub username\e[0m"
+                    echo -e "❌ \e[31mError: Option -u requires a GitHub username\e[0m" 1>&2
                     exit 1
                 fi
 
                 # check if repository is empty
                 if [ -z "$repository" ]; then
-                    echo -e "❌ \e[31mError: Option -u requires a repository name\e[0m"
+                    echo -e "❌ \e[31mError: Option -u requires a repository name\e[0m" 1>&2
                     exit 1
                 fi
 
                 echo "✅ Github username and repository name are valid."
             else
-                echo -e "❌ \e[31mError: syntax is not correct. The argument must contain a github username and a repository name splitted by a slash.\e[0m"
+                echo -e "❌ \e[31mError: syntax is not correct. The argument must contain a github username and a repository name splitted by a slash.\e[0m" 1>&2
                 exit 1
             fi
             ;;
@@ -67,7 +67,7 @@ if [ -f datapackage.yaml ]; then
 elif [ -f datapackage.json ]; then
     package_format="json"
 else
-    echo -e "❌ \e[31mError: datapackage not found\e[0m"
+    echo -e "❌ \e[31mError: datapackage not found\e[0m" 1>&2
     echo "Please create a datapackage.json or datapackage.yaml file."
     exit 1
 fi
@@ -88,7 +88,7 @@ if [ $valid_key_check = "true" ]; then
         yq . datapackage.yaml > datapackage.json
     fi
 else
-    echo -e "❌ \e[31mError: datapackage is invalid\e[0m"
+    echo -e "❌ \e[31mError: datapackage is invalid\e[0m" 1>&2
     exit 1
 fi
 
