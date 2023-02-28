@@ -33,14 +33,14 @@ in a directory where a datapackage is located. The default output file will be `
 
 If you want to use a custom output filename you can use `-o` flag:
 ```bash
-./script.sh -o customfilename.md
+frictionless2md -o customfilename.md
 ```
 
 **`-t` Add repository structure**
 
 If you want to add the tree of the folder where your datapackage is located you can add the `-t` flag:
 ```bash
-./script.sh -t
+frictionless2md -t
 ```
 
 This option requires the `tree` utility.
@@ -50,7 +50,7 @@ This option requires the `tree` utility.
 You can add "- URL" to the bulleted list of the output (Data dictionary section) specifying the flag `-u` followed by your GitHub username and the repository name (`username/repo`):
 
 ```bash
-./script.sh -u dennisangemi/frictionless2md
+frictionless2md -u dennisangemi/frictionless2md
 ```
 
 
