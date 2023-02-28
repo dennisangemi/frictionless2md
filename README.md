@@ -1,27 +1,31 @@
 # 🔧 frictionless2md
-A tool to convert frictionless datapackage (YAML or JSON) to markdown file (that can be used as README).
+A tool to convert [frictionless datapackage](https://specs.frictionlessdata.io/) (YAML or JSON) to markdown file (that can be used as README).
 
 > You can obtain a [markdown file like this](https://github.com/chiaraadornetto/dati-tv-elezioni-ue-2019#readme).
 
 ## Set-up
-Download `script.sh` 
+Download `frictionless2md` 
 ```bash
-wget "https://raw.githubusercontent.com/dennisangemi/frictionless2md/main/script.sh"
+wget "https://raw.githubusercontent.com/dennisangemi/frictionless2md/main/frictionless2md"
 ```
 
-make it executable
+Move it to `/usr/local/bin`
 ```bash
-chmod +x script.sh
+sudo mv ./frictionless2md /usr/local/bin
+```
+
+Make it executable
+```bash
+sudo chmod +x /usr/local/bin/frictionless2md
 ```
 
 ## Usage
-Read [requirements.txt](requirements.txt) otherwise the bash script won't work.
 
-Currently you can launch 
+You can simply launch 
 ```bash
-./script.sh
+frictionless2md
 ``` 
-in a directory where a datapackage is located and the default output file will be `METADATA.md`.
+in a directory where a datapackage is located. The default output file will be `METADATA.md`.
 
 ### Options
 
@@ -51,19 +55,5 @@ You can add "- URL" to the bulleted list of the output (Data dictionary section)
 
 
 ## Development
-`script.sh` is a bash script
+`frictionless2md` is a bash script. Read [requirements.txt](requirements.txt)
 
----
-<details>
-<summary>Future developments</summary>
-
-## Installation
-
-You can install this tool
-```bash
-apt-get bla bla instal bla bla frictionless2md
-```
-## Usage
-
-Launch simply `frictionless2md` in the same directory where `datapackage.yaml` is located.
-</details>
