@@ -70,6 +70,8 @@ You can add "- URL" to the bulleted list of the output (Data dictionary section)
 frictionless2md -u dennisangemi/frictionless2md
 ```
 
+![image](https://user-images.githubusercontent.com/77018886/222280556-8638848d-aa4a-4fa9-a7d2-204876497b6d.png)
+
 
 ## Development
 `frictionless2md` is a bash script. Read [requirements.txt](requirements.txt)
