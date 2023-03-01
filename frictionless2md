@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -u
 
 # set default output filename
 DEFAULT_OUTPUT_FILENAME="METADATA.md"
