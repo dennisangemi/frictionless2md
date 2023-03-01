@@ -1,20 +1,28 @@
 #!/bin/bash
 
 set -e
-set -u
 
 # set default output filename
-DEFAULT_OUTPUT_FILENAME="METADATA.md"
+output_file="METADATA.md"
+
+# set default warning flag
+show_warnings=false
+
+# set default tree flag
+print_tree=false
 
 
 ### OPTIONS ###
-while getopts ":o:u:t" arg; do
+while getopts ":o:u:tw" arg; do
     case $arg in
         o)
             output_file=$OPTARG
             ;;
         t)
-            tree_flag="true"
+            print_tree=true
+            ;;
+        w)
+            show_warnings=true
             ;;
         u)
             user_repo=$OPTARG
@@ -53,12 +61,6 @@ while getopts ":o:u:t" arg; do
     esac
 done
 
-# if output file is not set, use default
-if [ -z $output_file ]; then
-    output_file=$DEFAULT_OUTPUT_FILENAME
-    # echo "Using default output filename: $output_file"
-fi
-
 
 ### CHECK IF DATAPACKAGE EXISTS ###
 echo "🔍 Checking datapackage..."
@@ -95,7 +97,7 @@ fi
 
 
 ### SETUP $output_file ###
-echo "Building $output_file..."
+echo "🛠  Building $output_file..."
 # if $output_file exists, delete it
 if [ -f $output_file ]; then
     rm $output_file
@@ -112,8 +114,11 @@ if [ "$valid_key_check" = "true" ]; then
     echo "#" "$(cat datapackage.json | jq -r '.title')" >> $output_file
     echo "" >> $output_file
 else
-    echo -e "⚠️  Warning: Title key not found"
-    echo "Your $output_file will not contain a title"
+    # if show_warnings flag is true, print warning
+    if [ "$show_warnings" = true ]; then
+        echo -e "⚠️  Warning: Title key not found"
+        echo "Your $output_file will not contain a title"
+    fi
 fi
 
 
@@ -125,22 +130,27 @@ if [ "$valid_key_check" = "true" ]; then
     echo "$(cat datapackage.json | jq -r '.description')" >> $output_file
     echo "" >> $output_file
 else
-    echo -e "⚠️  Warning: Description key not found"
-    echo "Your $output_file will not contain a description"
+    # if show_warnings flag is true, print warning
+    if [ "$show_warnings" = true ]; then
+        echo -e "⚠️  Warning: Description key not found"
+        echo "Your $output_file will not contain a description"
+    fi
 fi
 
 
 ### REPOSITORY STRUCTURE ###
 # if tree flag is set, add tree to $output_file
-if [ "$tree_flag" = "true" ]; then
+if [ "$print_tree" = true ]; then
     echo "## Repository structure " >> $output_file
     echo "\`\`\`" >> $output_file
     echo "$(tree | head -n -2)" >> $output_file
     echo "\`\`\`" >> $output_file
     echo "" >> $output_file
 else
-    echo -e "⚠️  Warning: Tree flag (-t) not set"
-    echo "Your $output_file will not contain a repository structure"
+    # if show_warnings flag is true, print warning
+    if [ "$show_warnings" = true ]; then
+        echo -e "⚠️  Warning: Tree flag (-t) not set. Your $output_file will not contain a repository structure"
+    fi
 fi
 
 
@@ -167,8 +177,11 @@ do
         
         echo "$(cat datapackage.json | jq -r '.resources['$i'].description')" >> $output_file
     else
-        echo -e "⚠️  Warning: Description key not found for $filename"
-        echo "Description info will not be added to $output_file"
+        # if show_warnings flag is true, print warning
+        if [ "$show_warnings" = true ]; then
+            echo -e "⚠️  Warning: Description key not found for $filename"
+            echo "Description info will not be added to $output_file"
+        fi
     fi
 
     # print resource path
@@ -186,8 +199,11 @@ do
         delimiter=$(jq -r '.resources['$i'].dialect.csv.delimiter' datapackage.json)
         echo "- Delimiter: \`$delimiter\`" >> $output_file
     else
-        echo -e "⚠️  Warning: Dialect key not found for $filename"
-        echo "Delimiter info will not be added to $output_file"
+        # if show_warnings flag is true, print warning
+        if [ "$show_warnings" = true ]; then
+            echo -e "⚠️  Warning: Delimiter key not found for $filename"
+            echo "Delimiter info will not be added to $output_file"
+        fi
     fi
 
     # check if encoding key exists
@@ -196,8 +212,11 @@ do
     if [ "$valid_key_check" = "true" ]; then
         echo "- Encoding: \`$(cat datapackage.json | jq -r '.resources['$i'].encoding')\`" >> $output_file
     else
-        echo -e "⚠️  Warning: Encoding key not found for $filename"
-        echo "Encoding info will not be added to $output_file"
+        # if show_warnings flag is true, print warning
+        if [ "$show_warnings" = true ]; then
+            echo -e "⚠️  Warning: Encoding key not found for $filename"
+            echo "Encoding info will not be added to $output_file"
+        fi
     fi
 
     # add line break
@@ -218,7 +237,10 @@ do
         mlr --csv join -j Field -f frct-schema-$i.csv frct-example-$i.csv > tmp-frct-schema-$i.csv
         mv tmp-frct-schema-$i.csv frct-schema-$i.csv
     else
-        echo "⚠️  Warning: $filepath not found. Your $output_file will not contain the example column."
+        # if show_warnings flag is true, print warning
+        if [ "$show_warnings" = true ]; then
+            echo -e "⚠️  Warning: $filepath not found. Your $output_file will not contain the example column."
+        fi
     fi
     
     # convert frct-schema-$i.csv to markdown and add to $output_file
@@ -248,8 +270,11 @@ if [ "$valid_key_check" = "true" ]; then
     echo "This work is licensed under a ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')") License" >> $output_file
     echo "" >> $output_file
 else
-    echo -e "⚠️  Warning: License key not found"
-    echo "Your $output_file will not contain a license"
+    # if show_warnings flag is true, print warning
+    if [ "$show_warnings" = true ]; then
+        echo -e "⚠️  Warning: License key not found"
+        echo "Your $output_file will not contain a license"
+    fi
 fi
 
 
@@ -263,8 +288,11 @@ if [ "$valid_key_check" = "true" ]; then
     # add contributors table to $output_file
     cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat >> $output_file
 else
-    echo -e "⚠️  Warning: Contributors key not found"
-    echo "Your $output_file will not contain a contributors table"
+    # if show_warnings flag is true, print warning
+    if [ "$show_warnings" = true ]; then
+        echo -e "⚠️  Warning: Contributors key not found"
+        echo "Your $output_file will not contain a contributors table"
+    fi
 fi
 
 

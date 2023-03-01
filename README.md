@@ -29,6 +29,19 @@ in a directory where a datapackage is located. The default output file will be `
 
 ### Options
 
+**`-w` Show warnings**
+
+If you want to see the warnings, you can use `-w` flag:
+
+```bash
+frictionless2md -w
+```
+
+And you will get for example
+```
+⚠️ Warning: data/contenuti.csv not found. Your meta.md will not contain the example column.
+```
+
 **`-o` Set custom output filename**
 
 If you want to use a custom output filename you can use `-o` flag:
