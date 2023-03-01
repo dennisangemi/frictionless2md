@@ -36,15 +36,13 @@ If you want to see the warnings, you can use `-w` flag:
 ```bash
 frictionless2md -w
 ```
-<details>
-<summary>Output</summary>
-You will get for example
+
+and you will get for example
 
 ```
 ⚠️ Warning: data/contenuti.csv not found. Your meta.md will not contain the example column.
 ```
-</details>
-
+<br>
 
 **`-o` Set custom output filename**
 
@@ -52,6 +50,8 @@ If you want to use a custom output filename you can use `-o` flag:
 ```bash
 frictionless2md -o customfilename.md
 ```
+
+<br>
 
 **`-t` Add repository structure**
 
@@ -62,6 +62,8 @@ frictionless2md -t
 
 This option requires the `tree` utility.
 
+<br>
+
 **`-u` Add GitHub URLs to files**
 
 You can add "- URL" to the bulleted list of the output (Data dictionary section) specifying the flag `-u` followed by your GitHub username and the repository name (`username/repo`):
@@ -69,6 +71,8 @@ You can add "- URL" to the bulleted list of the output (Data dictionary section)
 ```bash
 frictionless2md -u dennisangemi/frictionless2md
 ```
+
+and you will get for example
 
 ![image](https://user-images.githubusercontent.com/77018886/222280556-8638848d-aa4a-4fa9-a7d2-204876497b6d.png)
 
