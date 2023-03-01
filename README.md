@@ -36,11 +36,15 @@ If you want to see the warnings, you can use `-w` flag:
 ```bash
 frictionless2md -w
 ```
+<details>
+<summary>Output</summary>
+You will get for example
 
-And you will get for example
 ```
 ⚠️ Warning: data/contenuti.csv not found. Your meta.md will not contain the example column.
 ```
+</details>
+
 
 **`-o` Set custom output filename**
 
