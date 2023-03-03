@@ -263,7 +263,7 @@ done
 
 ### PACKAGE LICENSE ###
 # if license key exists, add license to $output_file
-valid_key_check=$(jq -r '. | has("licenses")' datapackage.json), 
+valid_key_check=$(jq -r '. | has("licenses")' datapackage.json) 
 if [ "$valid_key_check" = "true" ]; then
     echo "## 📖 License" >> $output_file
     
