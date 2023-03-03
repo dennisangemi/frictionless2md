@@ -262,12 +262,55 @@ done
 
 
 ### PACKAGE LICENSE ###
-# check if license key exists
-valid_key_check=$(jq -r '. | has("licenses")' datapackage.json)
 # if license key exists, add license to $output_file
+valid_key_check=$(jq -r '. | has("licenses")' datapackage.json), 
 if [ "$valid_key_check" = "true" ]; then
     echo "## 📖 License" >> $output_file
-    echo "This work is licensed under a ["$(cat datapackage.json | jq -r '.licenses[0].title') "]($(cat datapackage.json | jq -r '.licenses[0].path')) ("$(cat datapackage.json | jq -r '.licenses[0].name')") License" >> $output_file
+    
+    # if name key exists, assign license name to variable
+    valid_key_check=$(jq -r '.licenses[0] | has("name")' datapackage.json)
+    if [ "$valid_key_check" = "true" ]; then
+        license_name=$(jq -r '.licenses[0].name' datapackage.json)
+    fi
+    
+    # if path key exists, assign license path to variable
+    valid_key_check=$(jq -r '.licenses[0] | has("path")' datapackage.json)
+    if [ "$valid_key_check" = "true" ]; then
+        license_path=$(jq -r '.licenses[0].path' datapackage.json)
+    fi
+
+    # if title key exists, assign license title to variable
+    valid_key_check=$(jq -r '.licenses[0] | has("title")' datapackage.json)
+    if [ "$valid_key_check" = "true" ]; then
+        license_title=$(jq -r '.licenses[0].title' datapackage.json)
+    fi
+    
+    # if variables license_name, license_path and license_title exist, print
+    if [ -n "$license_name" ] && [ -n "$license_path" ] && [ -n "$license_title" ]; then
+        echo "This work is licensed under a ["$license_title"]("$license_path") ("$license_name") License" >> $output_file
+    
+    # if variables license_name and license_path exist, print
+    elif [ -n "$license_name" ] && [ -n "$license_path" ]; then
+        echo "This work is licensed under a ["$license_name"]("$license_path") License" >> $output_file
+
+    # if variables license_name and license_title exist, print
+    elif [ -n "$license_name" ] && [ -n "$license_title" ]; then
+        echo "This work is licensed under a "$license_title" ("$license_name") License" >> $output_file
+
+    # if variables license_path and license_title exist, print
+    elif [ -n "$license_path" ] && [ -n "$license_title" ]; then
+        echo "This work is licensed under a ["$license_title"]("$license_path") License" >> $output_file
+
+    # if license_name variable exists, print
+    elif [ -n "$license_name" ]; then
+        echo "This work is licensed under a "$license_name" License" >> $output_file
+    
+    # if license_path variable exists, print
+    elif [ -n "$license_path" ]; then
+        echo "This work is licensed under "$license_path >> $output_file
+    fi
+
+    # add a line break
     echo "" >> $output_file
 else
     # if show_warnings flag is true, print warning
