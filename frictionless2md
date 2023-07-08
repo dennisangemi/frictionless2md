@@ -11,6 +11,25 @@ show_warnings=false
 # set default tree flag
 print_tree=false
 
+# help message
+if [[ $1 == "-h" || $1 == "--help" ]]; then
+    # Visualizza la documentazione
+    echo "frictionless2md - Convert frictionless datapackage to markdown"
+    echo
+    echo "Usage: frictionless2md [options]"
+    echo
+    echo "Options:"
+    echo "  -h, --help      Get help (this message)"
+    echo "  -w, --warnings  Show all warnings"
+    echo "  -t, --tree      Print repository structure"
+    echo "  -u, --user      Specify GitHub username and repository name"
+    echo "  -o, --output    Specify output filename"
+    echo ""
+    echo "Example:"
+    echo "frictionless2md -wt -u indecis-it/data -o my-project-metadata.md "
+
+    exit 0
+fi
 
 ### OPTIONS ###
 while getopts ":o:u:tw" arg; do
