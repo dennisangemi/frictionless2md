@@ -2,6 +2,9 @@
 
 set -e
 
+# version number
+version="1.0.0"
+
 # set default output filename
 output_file="METADATA.md"
 
@@ -19,11 +22,11 @@ if [[ $1 == "-h" || $1 == "--help" ]]; then
     echo "Usage: frictionless2md [options]"
     echo
     echo "Options:"
-    echo "  -h, --help      Get help (this message)"
-    echo "  -w, --warnings  Show all warnings"
-    echo "  -t, --tree      Print repository structure"
-    echo "  -u, --user      Specify GitHub username and repository name"
-    echo "  -o, --output    Specify output filename"
+    echo "  -h, --help   Get help (this message)"
+    echo "  -w           Show all warnings"
+    echo "  -t           Print repository structure"
+    echo "  -u           Specify GitHub username and repository name"
+    echo "  -o           Specify output filename"
     echo ""
     echo "Example:"
     echo "frictionless2md -wt -u indecis-it/data -o my-project-metadata.md "
