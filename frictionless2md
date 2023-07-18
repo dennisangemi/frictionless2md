@@ -3,7 +3,7 @@
 set -e
 
 # version number
-version="0.8.0"
+version="0.8.1"
 
 # set default output filename
 output_file="METADATA.md"
@@ -14,7 +14,7 @@ show_warnings=false
 # set default tree flag
 print_tree=false
 
-# show help function
+# function show help 
 show_help() 
     {
         echo "frictionless2md - Convert frictionless datapackage to markdown"
@@ -22,80 +22,120 @@ show_help()
         echo "Usage: frictionless2md [OPTIONS] [ARGS] ..."
         echo
         echo "Options:"
-        echo "  -h, --help      Get help (this message)"
-        echo "  -v, --version   Get version number"
-        echo "  -w              Show all warnings"
-        echo "  -t              Print repository structure"
-        echo "  -u TEXT         Specify GitHub username and repository name"
-        echo "  -o TEXT         Specify output filename"
+        echo "  -h, --help           Get help (this message)"
+        echo "  -v, --version        Get version number"
+        echo "  -w, --warnings       Show all warnings"
+        echo "  -t, --help           Print repository structure"
+        echo "  -u, --userepo TEXT   Specify GitHub username and repository name"
+        echo "  -o, --output  TEXT   Specify output filename"
         echo ""
         echo "Example:"
-        echo "frictionless2md -wt -u indecis-it/data -o my-project-metadata.md"
+        echo "frictionless2md -w -t -u indecis-it/data -o my-project-metadata.md"
+        echo ""
+        echo "Infos:"
+        echo "See more at https://github.com/dennisangemi/frictionless2md"
     }
 
-# help message
-if [[ $1 == "-h" || $1 == "--help" ]]; then
-    show_help
-    exit 0
-fi
+# function show error for missing argument
+show_error_arg()
+   {
+      local option=$1
+      echo -e "❌ \e[31mError: Option $option requires an argument.\e[0m See usage details running $0 --help" 1>&2
+   }
 
-# version
-if [[ $1 == "-v" || $1 == "--version" ]]; then
-    # Visualizza la documentazione
-    echo "frictionless2md version $version"
+# function show error for invalid option
+show_error_invalid_option()
+   {
+      local option=$1
+      echo -e "❌ \e[31mError: Option $option is not valid.\e[0m See usage details running $0 --help" 1>&2
+   }
 
-    exit 0
-fi
+# function show version
+show_version()
+   {
+      echo "$version"
+   }
 
 ### OPTIONS ###
-while getopts ":o:u:tw" arg; do
-    case $arg in
-        o)
-            output_file=$OPTARG
-            ;;
-        t)
-            print_tree=true
-            ;;
-        w)
-            show_warnings=true
-            ;;
-        u)
-            user_repo=$OPTARG
-            # check validity of user_repo
-            if [[ "$user_repo" == *"/"* ]]; then
-                # store username and repository name in variables
-                username=$(echo $user_repo | cut -d'/' -f1)
-                repository=$(echo $user_repo | cut -d'/' -f2)
+while [[ $# -gt 0 ]]; do
+    key="$1"
 
-                # check if username is empty
-                if [ -z "$username" ]; then
-                    echo -e "❌ \e[31mError: Option -u requires a GitHub username\e[0m" 1>&2
-                    exit 1
-                fi
-
-                # check if repository is empty
-                if [ -z "$repository" ]; then
-                    echo -e "❌ \e[31mError: Option -u requires a repository name\e[0m" 1>&2
-                    exit 1
-                fi
-
-                echo "✅ Github username and repository name are valid."
+    case $key in
+        -o|--output)
+            if [[ -n $2 ]]; then
+                output_file=$2
+                shift 2
             else
-                echo -e "❌ \e[31mError: syntax is not correct. The argument must contain a github username and a repository name splitted by a slash.\e[0m" 1>&2
+                show_error_arg $1
                 exit 1
             fi
             ;;
-        \?)
-            echo -e "❌ \e[31mError: Invalid option -$OPTARG.\e[0m See usage details https://github.com/dennisangemi/frictionless2md#usage" 1>&2
-            exit 1
+        -u|--userepo)
+            if [[ -n $2 ]]; then
+                user_repo=$2
+                if [[ "$user_repo" == *"/"* ]]; then
+                    # store username and repository name in variables
+                    username=$(echo $user_repo | cut -d'/' -f1)
+                    repository=$(echo $user_repo | cut -d'/' -f2)
+
+                    # check if username is empty
+                    if [ -z "$username" ]; then
+                        echo -e "❌ \e[31mError: Option -u requires a GitHub username\e[0m" 1>&2
+                        exit 1
+                    fi
+
+                    # check if repository is empty
+                    if [ -z "$repository" ]; then
+                        echo -e "❌ \e[31mError: Option -u requires a repository name\e[0m" 1>&2
+                        exit 1
+                    fi
+
+                    echo "✅ Github username and repository name are valid."
+                else
+                    echo -e "❌ \e[31mError: syntax is not correct. The argument must contain a github username and a repository name splitted by a slash.\e[0m" 1>&2
+                    exit 1
+                fi
+                shift 2
+            else
+                show_error_arg $1
+                exit 1
+            fi
             ;;
-        :)
-            echo -e "❌ \e[31mError: Option -$OPTARG requires an argument.\e[0m See usage details https://github.com/dennisangemi/frictionless2md#usage" 1>&2
+        -w|--warnings)
+            show_warnings=true
+            shift
+            ;;
+        
+        -t|--tree)
+            print_tree=true
+            shift
+            ;;
+
+        -v|--version)
+            show_version
+            exit 0
+            ;;
+
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            show_error_invalid_option $1
             exit 1
             ;;
     esac
 done
 
+# check if options works
+# echo output file:    $output_file
+# echo show worinings: $show_warnings
+# echo print tree:     $print_tree
+# echo username:       $username
+# echo repository:     $repository
+
+# pause
+# read -p "Premi INVIO per continuare..."
 
 ### CHECK IF DATAPACKAGE EXISTS ###
 echo "🔍 Checking datapackage..."
