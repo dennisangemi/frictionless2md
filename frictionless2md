@@ -3,7 +3,7 @@
 set -e
 
 # version number
-version="0.8.1"
+version="0.8.2"
 
 # set default output filename
 output_file="METADATA.md"
@@ -54,6 +54,24 @@ show_error_invalid_option()
 show_version()
    {
       echo "$version"
+   }
+
+# function pause
+pause()
+   {
+      read -p "Press [Enter] key to continue..."
+   }
+
+# function dev options checker
+dev_option_checker()
+   {
+        echo output file:    $output_file
+        echo show worinings: $show_warnings
+        echo print tree:     $print_tree
+        echo username:       $username
+        echo repository:     $repository
+
+        pause
    }
 
 ### OPTIONS ###
@@ -127,15 +145,8 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# check if options works
-# echo output file:    $output_file
-# echo show worinings: $show_warnings
-# echo print tree:     $print_tree
-# echo username:       $username
-# echo repository:     $repository
-
-# pause
-# read -p "Premi INVIO per continuare..."
+# dev check
+# dev_option_checker
 
 ### CHECK IF DATAPACKAGE EXISTS ###
 echo "🔍 Checking datapackage..."
