@@ -14,24 +14,28 @@ show_warnings=false
 # set default tree flag
 print_tree=false
 
+# show help function
+show_help() 
+    {
+        echo "frictionless2md - Convert frictionless datapackage to markdown"
+        echo
+        echo "Usage: frictionless2md [OPTIONS] [ARGS] ..."
+        echo
+        echo "Options:"
+        echo "  -h, --help      Get help (this message)"
+        echo "  -v, --version   Get version number"
+        echo "  -w              Show all warnings"
+        echo "  -t              Print repository structure"
+        echo "  -u TEXT         Specify GitHub username and repository name"
+        echo "  -o TEXT         Specify output filename"
+        echo ""
+        echo "Example:"
+        echo "frictionless2md -wt -u indecis-it/data -o my-project-metadata.md"
+    }
+
 # help message
 if [[ $1 == "-h" || $1 == "--help" ]]; then
-    # Visualizza la documentazione
-    echo "frictionless2md - Convert frictionless datapackage to markdown"
-    echo
-    echo "Usage: frictionless2md [options]"
-    echo
-    echo "Options:"
-    echo "  -h, --help      Get help (this message)"
-    echo "  -v, --version   Get version number"
-    echo "  -w              Show all warnings"
-    echo "  -t              Print repository structure"
-    echo "  -u              Specify GitHub username and repository name"
-    echo "  -o              Specify output filename"
-    echo ""
-    echo "Example:"
-    echo "frictionless2md -wt -u indecis-it/data -o my-project-metadata.md "
-
+    show_help
     exit 0
 fi
 
