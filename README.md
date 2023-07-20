@@ -39,7 +39,7 @@ Short option | Long option | Requires argument | Description
 `-t` | `--tree` | `false` | Add repository structure (tree). [See more](#repository-structore)
 `-u` | `--userepo` | `true` | Add GitHub URLs to files. [See more](#github-urls-to-files)
 
-<help>
+<br>
 
 #### Help
 `-h` or `--help`
