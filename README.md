@@ -34,6 +34,7 @@ Here's a summary
 Short option | Long option | Requires argument | Description 
 --- | --- | --- | ---
 `-h` | `--help` | `false` | Show help. [See more](#help)
+`-v` | `--version` | `false` | Show version number. [See more](#version)
 `-w` | `--warnings` | `false` | Show warnings. [See more](#warnings)
 `-o` | `--output` | `true` | Set custom output filename. [See more](#custom-output-filename)
 `-t` | `--tree` | `false` | Add repository structure (tree). [See more](#repository-structore)
@@ -48,6 +49,17 @@ If you want to open the help, you can run
 
 ```sh
 frictionless2md -h
+```
+
+<br>
+
+#### Version
+`-v` or `--version`
+
+If you want to understand which version of the tool you have, use `-v` or `--version` flag as follow
+
+```sh
+frictionless2md -v
 ```
 
 <br>
