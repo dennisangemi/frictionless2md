@@ -3,7 +3,7 @@
 set -e
 
 # version number
-version="0.8.2"
+version="0.9.0"
 
 # set default output filename
 output_file="METADATA.md"
@@ -415,7 +415,7 @@ if [ "$valid_key_check" = "true" ]; then
     # print contributors title to $output_file
     echo "## 👥 Contributors" >> $output_file
     # add contributors table to $output_file
-    cat datapackage.json | jq '[.contributors[] | {Name: .title, Role: .role, Email: .email}]' | mlr --j2m cat >> $output_file
+    cat datapackage.json | jq 'if ([.contributors[] | has("role")] | any) then [.contributors[] | {Name: .title, Role: (.role // ""), Email: .email}] else [.contributors[] | {Name: .title, Email: .email}] end' | mlr --j2m cat >> $output_file
 else
     # if show_warnings flag is true, print warning
     if [ "$show_warnings" = true ]; then
@@ -423,7 +423,6 @@ else
         echo "Your $output_file will not contain a contributors table"
     fi
 fi
-
 
 ### CLEANUP ###
 # if package is yaml, delete json created
