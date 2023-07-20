@@ -5,6 +5,9 @@ set -e
 # version number
 version="0.9.1"
 
+# working datapackage temp file name
+working_datapackage="frct-temp-dp.json"
+
 # set default output filename
 output_file="METADATA.md"
 
@@ -89,10 +92,11 @@ check_requirements()
     }
 
 
-# check mandatory requirements
+### CHECK (MANDATORY) REQUIREMENTS ###
 check_requirements jq https://jqlang.github.io/jq/download/
 check_requirements frictionless https://kislyuk.github.io/yq/#installation
 check_requirements mlr https://miller.readthedocs.io/en/6.8.0/installing-miller/
+
 
 ### OPTIONS ###
 while [[ $# -gt 0 ]]; do
@@ -166,8 +170,10 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+
 # dev check
 # dev_option_checker
+
 
 ### CHECK IF DATAPACKAGE EXISTS ###
 echo "🔍 Checking datapackage..."
@@ -177,6 +183,7 @@ if [ -f datapackage.yaml ]; then
     check_requirements yq https://jqlang.github.io/jq/download/
 elif [ -f datapackage.json ]; then
     package_format="json"
+    cp datapackage.json $working_datapackage
 else
     echo -e "❌ \e[31mError: datapackage not found\e[0m" 1>&2
     echo "Please create a datapackage.json or datapackage.yaml file."
@@ -188,7 +195,6 @@ echo "✅ datapackage exists"
 
 
 ### CHECK DATAPACKAGE VALIDITY ###
-# WIP #16
 valid_key_check=$(frictionless validate datapackage.$package_format --pick-errors "package-error" --json | jq '.tasks | has(0)')
 # if package is valid
 if [ $valid_key_check = "true" ]; then
@@ -196,7 +202,7 @@ if [ $valid_key_check = "true" ]; then
 
     # if package is yaml, convert to json
     if [ $package_format = "yaml" ]; then
-        yq . datapackage.yaml > datapackage.json
+        yq . datapackage.yaml > $working_datapackage
     fi
 else
     echo -e "❌ \e[31mError: datapackage is invalid\e[0m" 1>&2
@@ -206,20 +212,22 @@ fi
 
 ### SETUP $output_file ###
 echo "🛠  Building $output_file..."
+
 # if $output_file exists, delete it
 if [ -f $output_file ]; then
     rm $output_file
 fi
+
 # create new $output_file
 touch $output_file
 
 
 ### PACKAGE TITLE ###
 # check if title key exists
-valid_key_check=$(jq -r '. | has("title")' datapackage.json)
+valid_key_check=$(jq -r '. | has("title")' $working_datapackage)
 # if title key exists, add title to $output_file
 if [ "$valid_key_check" = "true" ]; then
-    echo "#" "$(cat datapackage.json | jq -r '.title')" >> $output_file
+    echo "#" "$(cat $working_datapackage | jq -r '.title')" >> $output_file
     echo "" >> $output_file
 else
     # if show_warnings flag is true, print warning
@@ -232,10 +240,10 @@ fi
 
 ### PACKAGE DESCRIPTION ###
 # check if description key exists
-valid_key_check=$(jq -r '. | has("description")' datapackage.json)
+valid_key_check=$(jq -r '. | has("description")' $working_datapackage)
 # if description key exists, add description to $output_file
 if [ "$valid_key_check" = "true" ]; then
-    echo "$(cat datapackage.json | jq -r '.description')" >> $output_file
+    echo "$(cat $working_datapackage | jq -r '.description')" >> $output_file
     echo "" >> $output_file
 else
     # if show_warnings flag is true, print warning
@@ -265,25 +273,25 @@ fi
 ### DATA DICTIONARY ###
 echo "## Data Dictionary" >> $output_file
 # count the number of resources
-n_resources=$(cat datapackage.json | jq -r '.resources[].name' | wc -l)
+n_resources=$(cat $working_datapackage | jq -r '.resources[].name' | wc -l)
 # loop over resources
 for (( i=0; i<$n_resources; i++ ))
 do
     # get resource infos
-    filename=$(cat datapackage.json | jq -r '.resources['$i'].name')
-    filepath=$(cat datapackage.json | jq -r '.resources['$i'].path')
-    title=$(cat datapackage.json | jq -r '.resources['$i'].title')
+    filename=$(cat $working_datapackage | jq -r '.resources['$i'].name')
+    filepath=$(cat $working_datapackage | jq -r '.resources['$i'].path')
+    title=$(cat $working_datapackage | jq -r '.resources['$i'].title')
 
     # print resource name
     echo "### 📄 [$filename]($filepath)" >> $output_file
 
     # print resource description
     # check if description key exists
-    valid_key_check=$(jq -r '.resources['$i'] | has("description")' datapackage.json)
+    valid_key_check=$(jq -r '.resources['$i'] | has("description")' $working_datapackage)
     # if description key exists, add description to $output_file
     if [ "$valid_key_check" = "true" ]; then
         
-        echo "$(cat datapackage.json | jq -r '.resources['$i'].description')" >> $output_file
+        echo "$(cat $working_datapackage | jq -r '.resources['$i'].description')" >> $output_file
     else
         # if show_warnings flag is true, print warning
         if [ "$show_warnings" = true ]; then
@@ -301,10 +309,10 @@ do
     fi
 
     # check if delimiter key exists
-    valid_key_check=$(jq -r '.resources['$i'].dialect.csv | has("delimiter")' datapackage.json)
+    valid_key_check=$(jq -r '.resources['$i'].dialect.csv | has("delimiter")' $working_datapackage)
     # if delimiter key exists, add delimiter info to $output_file
     if [ "$valid_key_check" = "true" ]; then
-        delimiter=$(jq -r '.resources['$i'].dialect.csv.delimiter' datapackage.json)
+        delimiter=$(jq -r '.resources['$i'].dialect.csv.delimiter' $working_datapackage)
         echo "- Delimiter: \`$delimiter\`" >> $output_file
     else
         # if show_warnings flag is true, print warning
@@ -315,10 +323,10 @@ do
     fi
 
     # check if encoding key exists
-    valid_key_check=$(jq '.resources['$i'] | has("encoding")' datapackage.json)
+    valid_key_check=$(jq '.resources['$i'] | has("encoding")' $working_datapackage)
     # if encoding key exists, add encoding info to $output_file
     if [ "$valid_key_check" = "true" ]; then
-        echo "- Encoding: \`$(cat datapackage.json | jq -r '.resources['$i'].encoding')\`" >> $output_file
+        echo "- Encoding: \`$(cat $working_datapackage | jq -r '.resources['$i'].encoding')\`" >> $output_file
     else
         # if show_warnings flag is true, print warning
         if [ "$show_warnings" = true ]; then
@@ -331,7 +339,7 @@ do
     echo "" >> $output_file
 
     # create schema csv table, join title and description
-    jq '.resources['$i'].schema.fields' datapackage.json | jq 'map(if has("title") and has("description") then . + {"join": "\(.title): \(.description)"} elif has("title") then . + {"join": .title} elif has("description") then . + {"join": .description} else . end)[] | {Field: .name, Type: .type, Description: (.join // "")}'  | mlr --j2c cat > frct-schema-$i.csv
+    jq '.resources['$i'].schema.fields' $working_datapackage | jq 'map(if has("title") and has("description") then . + {"join": "\(.title): \(.description)"} elif has("title") then . + {"join": .title} elif has("description") then . + {"join": .description} else . end)[] | {Field: .name, Type: .type, Description: (.join // "")}'  | mlr --j2c cat > frct-schema-$i.csv
 
     # if $filepath exists, create example csv table (transpose first row of $filepath)
     if [ -f $filepath ]; then
@@ -371,26 +379,26 @@ done
 
 ### PACKAGE LICENSE ###
 # if license key exists, add license to $output_file
-valid_key_check=$(jq -r '. | has("licenses")' datapackage.json) 
+valid_key_check=$(jq -r '. | has("licenses")' $working_datapackage) 
 if [ "$valid_key_check" = "true" ]; then
     echo "## 📖 License" >> $output_file
     
     # if name key exists, assign license name to variable
-    valid_key_check=$(jq -r '.licenses[0] | has("name")' datapackage.json)
+    valid_key_check=$(jq -r '.licenses[0] | has("name")' $working_datapackage)
     if [ "$valid_key_check" = "true" ]; then
-        license_name=$(jq -r '.licenses[0].name' datapackage.json)
+        license_name=$(jq -r '.licenses[0].name' $working_datapackage)
     fi
     
     # if path key exists, assign license path to variable
-    valid_key_check=$(jq -r '.licenses[0] | has("path")' datapackage.json)
+    valid_key_check=$(jq -r '.licenses[0] | has("path")' $working_datapackage)
     if [ "$valid_key_check" = "true" ]; then
-        license_path=$(jq -r '.licenses[0].path' datapackage.json)
+        license_path=$(jq -r '.licenses[0].path' $working_datapackage)
     fi
 
     # if title key exists, assign license title to variable
-    valid_key_check=$(jq -r '.licenses[0] | has("title")' datapackage.json)
+    valid_key_check=$(jq -r '.licenses[0] | has("title")' $working_datapackage)
     if [ "$valid_key_check" = "true" ]; then
-        license_title=$(jq -r '.licenses[0].title' datapackage.json)
+        license_title=$(jq -r '.licenses[0].title' $working_datapackage)
     fi
     
     # if variables license_name, license_path and license_title exist, print
@@ -431,13 +439,13 @@ fi
 
 ### PACKAGE CONTRIBUTORS ###
 # check if contributors key exists
-valid_key_check=$(cat datapackage.json | jq -r '. | has("contributors")')
+valid_key_check=$(cat $working_datapackage | jq -r '. | has("contributors")')
 # if contributors key exists, add contributors table to $output_file
 if [ "$valid_key_check" = "true" ]; then
     # print contributors title to $output_file
     echo "## 👥 Contributors" >> $output_file
     # add contributors table to $output_file
-    cat datapackage.json | jq 'if ([.contributors[] | has("role")] | any) then [.contributors[] | {Name: .title, Role: (.role // ""), Email: .email}] else [.contributors[] | {Name: .title, Email: .email}] end' | mlr --j2m cat >> $output_file
+    cat $working_datapackage | jq 'if ([.contributors[] | has("role")] | any) then [.contributors[] | {Name: .title, Role: (.role // ""), Email: .email}] else [.contributors[] | {Name: .title, Email: .email}] end' | mlr --j2m cat >> $output_file
 else
     # if show_warnings flag is true, print warning
     if [ "$show_warnings" = true ]; then
@@ -447,11 +455,10 @@ else
 fi
 
 ### CLEANUP ###
-# if package is yaml, delete json created
-if [ "$package_format" = "yaml" ]; then
-    rm datapackage.json
+# if $working_datapackage temp file exists, delete it
+if [ -f $working_datapackage ]; then
+    rm $working_datapackage
 fi
-
 
 ### END ###
 echo "✅ $output_file created"
