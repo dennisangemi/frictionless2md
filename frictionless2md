@@ -34,6 +34,7 @@ show_help()
         echo "  -t, --help           Print repository structure"
         echo "  -u, --userepo TEXT   Specify GitHub username and repository name"
         echo "  -o, --output  TEXT   Specify output filename"
+        echo "  -m, --mention        Add mention to output file"
         echo ""
         echo "Example:"
         echo "frictionless2md -w -t -u indecis-it/data -o my-project-metadata.md"
