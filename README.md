@@ -39,6 +39,7 @@ Short option | Long option | Requires argument | Description
 `-o` | `--output` | `true` | Set custom output filename. [See more](#custom-output-filename)
 `-t` | `--tree` | `false` | Add repository structure (tree). [See more](#repository-structore)
 `-u` | `--userepo` | `true` | Add GitHub URLs to files. [See more](#github-urls-to-files)
+`-m` | `--mention` | `false` | Mention this tool at the end of the generated file. [See more](#mention)
 
 <br>
 
@@ -131,8 +132,22 @@ and you will get for example
 
 <br>
 
+#### Mention
+`-m` or `--mention`
+
+Use `-m` or `--mention` flag to nention this tool at the end of the generated file.
+
+```sh
+frictionless2md -m
+```
+
+Will add this line to the output
+> Generated from datapackage.yaml with [`frictionless2md`](https://github.com/dennisangemi/frictionless2md)
+
+<br>
+
 ## Development
-`frictionless2md` is a bash script. Read [requirements.txt](requirements.txt)
+`frictionless2md` is a bash script based on [these requirements](#requirements).
 
 ## Requirements
 
