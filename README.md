@@ -122,3 +122,12 @@ and you will get for example
 ## Development
 `frictionless2md` is a bash script. Read [requirements.txt](requirements.txt)
 
+## Requirements
+
+| tool | docs | mandatory |
+| --- | --- | --- |
+| `frictionless` | [frictionless-py](https://framework.frictionlessdata.io/) | `true`
+| `mlr` | [miller](https://miller.readthedocs.io/) | `true`
+| `jq` | [jq](https://jqlang.github.io/jq/download/) | `true`
+| `yq` | [yq](https://kislyuk.github.io/yq/#installation) | `false`
+| `tree` | [tree-emoji-cli](https://github.com/sandoche/tree-emoji-cli) | `false`

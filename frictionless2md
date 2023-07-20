@@ -74,6 +74,26 @@ dev_option_checker()
         pause
    }
 
+# function check requirements installation
+check_requirements()
+    {
+        local tool=$1
+        local url=$2
+
+        if ! command -v $tool &> /dev/null
+        then
+            echo -e "❌ \e[31mError: $tool is not installed\e[0m" 1>&2
+            echo "Please install $tool ($url)"
+            exit 1
+        fi
+    }
+
+
+# check mandatory requirements
+check_requirements jq https://jqlang.github.io/jq/download/
+check_requirements frictionless https://kislyuk.github.io/yq/#installation
+check_requirements mlr https://miller.readthedocs.io/en/6.8.0/installing-miller/
+
 ### OPTIONS ###
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -126,6 +146,7 @@ while [[ $# -gt 0 ]]; do
         
         -t|--tree)
             print_tree=true
+            check_requirements tree https://github.com/sandoche/tree-emoji-cli#install
             shift
             ;;
 
@@ -153,6 +174,7 @@ echo "🔍 Checking datapackage..."
 # if datapckage exists, set package format else exit
 if [ -f datapackage.yaml ]; then
     package_format="yaml"
+    check_requirements yq https://jqlang.github.io/jq/download/
 elif [ -f datapackage.json ]; then
     package_format="json"
 else

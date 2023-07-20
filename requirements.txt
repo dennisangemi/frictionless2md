@@ -1,5 +1,0 @@
-yq
-jq
-mlr
-tree
-frictionless
