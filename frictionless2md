@@ -251,7 +251,7 @@ fi
 if [ "$print_tree" = true ]; then
     echo "## Repository structure " >> $output_file
     echo "\`\`\`" >> $output_file
-    echo "$(tree | head -n -2)" >> $output_file
+    echo "$(tree | head -n -2 | tr -s '\n')" >> $output_file
     echo "\`\`\`" >> $output_file
     echo "" >> $output_file
 else
