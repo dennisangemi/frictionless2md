@@ -3,7 +3,7 @@
 set -e
 
 # version number
-version="0.9.1"
+version="0.9.2"
 
 # working datapackage temp file name
 working_datapackage="frct-temp-dp.json"
@@ -16,6 +16,9 @@ show_warnings=false
 
 # set default tree flag
 print_tree=false
+
+# set default mention flag
+mention_flag=false
 
 # function show help 
 show_help() 
@@ -91,6 +94,18 @@ check_requirements()
         fi
     }
 
+# function to print mention
+print_mention()
+    {
+        local output_md_file=$1         # filename di output
+        local source_metadata_file=$2   # filename di input
+
+        echo "" >> $output_md_file
+        echo "---" >> $output_md_file
+        echo "" >> $output_md_file
+        echo "Generated from $source_metadata_file with [\`frictionless2md\`](https://github.com/dennisangemi/frictionless2md)" >> $output_md_file
+        echo "" >> $output_md_file
+    }
 
 ### CHECK (MANDATORY) REQUIREMENTS ###
 check_requirements jq https://jqlang.github.io/jq/download/
@@ -151,6 +166,11 @@ while [[ $# -gt 0 ]]; do
         -t|--tree)
             print_tree=true
             check_requirements tree https://github.com/sandoche/tree-emoji-cli#install
+            shift
+            ;;
+
+        -m|--mention)
+            mention_flag=true
             shift
             ;;
 
@@ -454,11 +474,20 @@ else
     fi
 fi
 
+
+### MENTION ###
+# if mention flag is set, add mention to $output_file
+if [ "$mention_flag" = true ]; then
+    print_mention $output_file datapackage.$package_format
+fi
+
+
 ### CLEANUP ###
 # if $working_datapackage temp file exists, delete it
 if [ -f $working_datapackage ]; then
     rm $working_datapackage
 fi
+
 
 ### END ###
 echo "✅ $output_file created"
