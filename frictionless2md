@@ -37,7 +37,7 @@ show_help()
         echo "  -m, --mention        Add mention to output file"
         echo ""
         echo "Example:"
-        echo "frictionless2md -w -t -u indecis-it/data -o my-project-metadata.md"
+        echo "frictionless2md -w -t -u -m indecis-it/data -o my-project-metadata.md"
         echo ""
         echo "Infos:"
         echo "See more at https://github.com/dennisangemi/frictionless2md"
